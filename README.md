@@ -47,15 +47,15 @@ Lab使用mysql与python3.9
 
 ## 字段类型
 
-|字段名称|字段类型|
-|---|---|
-|kdno|numeric(4,0)|
-|kd_name|varchar(20)|
-|kcno|numeric(4,0)|
-|ccno|numeric(4,0)|
-|exptime||
-|papername|varchar(20)|
-|stu_no|numeric(11,0)|
-|stu_name|varchar(20)|
-|registno|numeric(6,0)|
-|seat|numeric(3,0)|
+| 字段名称  | 字段类型      |
+| --------- | ------------- |
+| kdno      | numeric(4,0)  |
+| kd_name   | varchar(20)   |
+| kcno      | numeric(4,0)  |
+| ccno      | numeric(4,0)  |
+| exptime   |               |
+| papername | varchar(20)   |
+| stu_no    | numeric(11,0) |
+| stu_name  | varchar(20)   |
+| registno  | numeric(6,0)  |
+| seat      | numeric(3,0)  |
