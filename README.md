@@ -11,9 +11,9 @@ Lab使用mysql与python3.9
 为了尽可能降低数据库的耦合性，提高复用空间，应先考虑所提供的数据中有哪些可抽象的实体概念，而不是完全根据数据内容创建表。
 
 1. 考点：考点应是独立的实体，具有考点号、考点名称两个字段
-2. 学生：学生应是独立的实体，具有姓名字段（考虑到重名可能，应当添加学号）
+2. 学生：学生应是独立的实体，具有考号、姓名字段
 3. 考试：在某个考场举行的考试，引用考点的考点号、考点名称字段，本身具有考场号、场次号、开考时间、指定试卷号
-4. 准考证：某学生参与某场考试，引用考试的考点号、考场号、场次号（间接地引用了考点）字段，引用学生的姓名字段，本身具有考号、指定座位号
+4. 准考证：某学生参与某场考试，引用考试的考点号、考场号、场次号（间接地引用了考点）字段，引用学生的考号、姓名字段，本身指定座位号
 
 从引用关系的角度分析，考试基于考点，准考证基于考试和学生
 
@@ -35,15 +35,15 @@ Lab使用mysql与python3.9
 
 - kd(<u>kdno</u>,kd_name)
 - exam(<u>kdno</u>,<u>kcno</u>,<u>ccno</u>,exptime,papername)
-- student(<u>stu_no</u>,stu_name)
+- student(<u>registno</u>,stu_name)
 
 联系集
-- exam_takes(<u>registno</u>,seat,stu_no,kdno,kcno,ccno)
+- exam_takes(<u>registno</u>,seat,stu_no,<u>kdno</u>,<u>kcno</u>,<u>ccno</u>)
 - exam_arrangement(<u>kdno</u>,<u>kcno</u>,<u>ccno</u>,exptime,papername)
 
-对于弱实体集exam，其对应的弱联系集关系模式与其自身完全一致。此处处理方式参考书本P182与P183对于section与sec_course的分析。
+对于弱实体集exam，其对应的弱联系集关系模式与其自身完全一致。此处处理方式参考书本P182与P183对于section与sec_course的分析,仍将二者都写出。
 
-但我认为此时的弱联系集（exam_arrangement、sec_course）是实现上的冗余，故在Lab实现中省略。
+但此时的弱联系集（exam_arrangement、sec_course）是实现上的冗余，故在Lab实现中省略。(参照11.8号课上讲法)
 
 ## 字段类型
 
