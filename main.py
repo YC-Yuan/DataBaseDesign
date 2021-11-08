@@ -27,11 +27,6 @@ def check_argv():
         exit(0)
 
 
-def invalid_data(data):
-    print('Wrong data:')
-    print(data)
-
-
 def check_registno(registno):
     if type(registno) is numpy.int64 and 100000 <= registno <= 999999:
         return True
@@ -40,7 +35,7 @@ def check_registno(registno):
 
 
 def check_seat(seat):
-    if type(seat) is numpy.int64 and kdno <= 9999:
+    if type(seat) is numpy.int64 and seat <= 999:
         return True
     else:
         return False
@@ -54,14 +49,14 @@ def check_kdno(kdno):
 
 
 def check_kcno(kcno):
-    if type(kcno) is numpy.int64 and kdno <= 9999:
+    if type(kcno) is numpy.int64 and kcno <= 9999:
         return True
     else:
         return False
 
 
 def check_ccno(ccno):
-    if type(ccno) is numpy.int64 and kdno <= 9999:
+    if type(ccno) is numpy.int64 and ccno <= 9999:
         return True
     else:
         return False
@@ -144,13 +139,14 @@ if __name__ == '__main__':
                     else:  # 已有记录,此时检查是否匹配新数据
                         if kd[1] != kdname:
                             print('一个考点编号只能对应一个数据,请比对数据是否与"%d,%s"冲突' % (kd[0], kd[1]))
-                            invalid_data(data)
+                            print(data)
                             raise Exception()
                     # 写入考试
                     sql = db_api.insert_exam(kdno, kcno, ccno, exptime, papername)
                     cursor.execute(sql)
                 else:
-                    invalid_data(data)
+                    print('数据不符合格式要求')
+                    print(data)
                     raise Exception()
         except Exception as e:
             print_room_info()
@@ -193,7 +189,7 @@ if __name__ == '__main__':
                     else:  # 已有记录,检查是否匹配
                         if student[1] != name:
                             print('一个准考证号只能对应一位学生,请对比数据是否与"%d,%s"冲突' % (student[0], student[1]))
-                            invalid_data(data)
+                            print(data)
                             raise Exception
                     # 写入准考证
                     sql = db_api.get_exam_takes(registno=registno, kdno=kdno, kcno=kcno, ccno=ccno)
@@ -212,7 +208,8 @@ if __name__ == '__main__':
                         print('第%d行存在重复的准考信息' % (i + 1))
                         print(data)
                 else:
-                    invalid_data(data)
+                    print("数据不符合格式要求")
+                    print(data)
                     raise Exception()
         except Exception as e:
             print(e)

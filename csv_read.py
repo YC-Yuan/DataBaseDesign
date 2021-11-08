@@ -6,11 +6,15 @@ f_stu = 'student.csv'
 
 
 def read_csv(filename):
-    f = open(filename, mode='rb')
-    data = f.read()
-    f = chardet.detect(data)['encoding']
-    data = pd.read_csv(filename, encoding=f)
-    return data
+    try:
+        f = open(filename, mode='rb')
+        data = f.read()
+        f = chardet.detect(data)['encoding']
+        data = pd.read_csv(filename, encoding=f)
+        return data
+    except:
+        print('读取文件失败,请检查文件路径')
+        exit(0)
 
 
 def get_df_cols(df):

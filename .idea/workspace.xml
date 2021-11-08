@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f8b742ba-7156-4e00-88d0-574ff90be60e" name="Changes" comment="init">
-      <change afterPath="$PROJECT_DIR$/configs.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/csv_read.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/db_api.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
+    <list default="true" id="f8b742ba-7156-4e00-88d0-574ff90be60e" name="Changes" comment="process done">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/E-R.png" beforeDir="false" afterPath="$PROJECT_DIR$/E-R.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/csv_read.py" beforeDir="false" afterPath="$PROJECT_DIR$/csv_read.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/student_ansi.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -198,7 +193,7 @@
       <updated>1635851618637</updated>
       <workItem from="1635851624783" duration="98000" />
       <workItem from="1636169845253" duration="3836000" />
-      <workItem from="1636375023767" duration="10153000" />
+      <workItem from="1636375023767" duration="11237000" />
     </task>
     <task id="LOCAL-00001" summary="文档">
       <created>1636175155860</created>
@@ -214,7 +209,14 @@
       <option name="project" value="LOCAL" />
       <updated>1636178209035</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="process done">
+      <created>1636385329606</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1636385329606</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -236,7 +238,8 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="文档" />
     <MESSAGE value="init" />
-    <option name="LAST_COMMIT_MESSAGE" value="init" />
+    <MESSAGE value="process done" />
+    <option name="LAST_COMMIT_MESSAGE" value="process done" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/DataBaseDesign$main.coverage" NAME="main Coverage Results" MODIFIED="1636380965248" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
