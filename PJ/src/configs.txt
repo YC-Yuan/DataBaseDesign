@@ -1,0 +1,4 @@
+localhost
+root
+password
+database_pj1
