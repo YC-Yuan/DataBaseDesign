@@ -35,15 +35,14 @@ def init_tables():
     db = get_db()
     cursor = db.cursor()
     try:
-        init_sql = ""
-        with open("../dbase/sql/InitSql.sql", "r", encoding="utf8") as f:
-            for line in f.readlines():
-                init_sql = init_sql + line
-        print(init_sql)
-        # 建表
-        # TODO
-
-        cursor.execute(init_sql)
+        with open("./InitSql.sql", "r", encoding="utf8") as f:
+            sql_list = f.read().split(';')[:-1]
+            for x in sql_list:
+                if '\n' in x:
+                    # 脚本换行处替换为空格
+                    x = x.replace('\n', ' ')
+                x += ';'
+                cursor.execute(x)
     except sql.MySQLError as e:
         print(e)
         db.rollback()
@@ -53,3 +52,6 @@ def init_tables():
         cursor.close()
         db.close()
 
+
+if __name__ == '__main__':
+    init_tables()
