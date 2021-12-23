@@ -36,7 +36,7 @@ def init_tables():
     cursor = db.cursor()
     try:
         init_sql = ""
-        with open("../dbase/sql/initSql.sql", "r", encoding="utf8") as f:
+        with open("../dbase/sql/InitSql.sql", "r", encoding="utf8") as f:
             for line in f.readlines():
                 init_sql = init_sql + line
         print(init_sql)
