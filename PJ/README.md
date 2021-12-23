@@ -16,11 +16,17 @@
 
 - 部门信息 department (<u>dept_id</u>, name)
 
-- 课程信息 course (<u>course_id</u>, name, category, content, time_slot)
+- 课程信息 course (<u>course_id</u>, name, category, content, start_time, end_time)
 
-- 用户信息 user(<u>user_id</u>, username, password, role)
+- 用户信息 user(<u>username</u>, password)
 
-- 职员信息 staff (<u>user_id</u>, name, gender, age, hiredate, city, telephone, email, officeDate)
+- 管理员 admin(<u>username</u>)
+
+- 职员信息 staff (<u>user_id</u>, username, name, gender, age, hire_date, city, telephone, email)
+
+- 教师信息 instructor(<u>user_id</u>, office_date)
+
+- 主管信息 leader(<u>user_id</u>, office_date)
 
 - 日志信息 log (<u>log_id</u>, operation, date)
 
@@ -29,10 +35,11 @@
 ### 关系集
 
 - 职员 & 部门：属于 belong (<u>user_id</u>, <u>dept_id</u>)
-- 普通员工 & 课程：培训 take (<u>staff_id</u>, <u>course_id</u>)
-- 普通员工 & 考试：参加 participate ()
-- 课程 & 考试：
-- 教师 & 开课：教授 teach (<u>instructor_id</u>, <u>course_id</u>, date)
+- 普通员工 & 课程：培训 take (<u>user_id</u>, <u>course_id</u>, evaluation)
+- 普通员工 & 课程：考试 participate (<u>user_id</u>, <u>course_id</u>, <u>time</u>, score)
+- 教师 & 开课：教授 teach (<u>user_id</u>, <u>course_id</u>)
+- 主管 & 部门：主管 charge(<u>user_id</u>, <u>dept_id</u>)
+- 部门 & 课程：要求 offer(<u>dept_id</u>, <u>course_id</u>, require)
 - 用户 & 日志：痕迹 trace (<u>user_id</u>, <u>log_id</u>)
 
 
@@ -195,10 +202,10 @@ CREATE TABLE teach (
 );
 ```
 
-- lead：部门主管信息
+- charge：部门主管信息
 
 ```sqlite
-CREATE TABLE lead (
+CREATE TABLE charge (
   user_id CHAR(11) NOT NULL,
   dept_id INT NOT NULL,
   PRIMARY KEY (user_id, dept_id),
@@ -207,15 +214,28 @@ CREATE TABLE lead (
 );
 ```
 
-- leave：用户操作后留下的日志
+- trace：用户操作后留下的日志
 
 ```sqlite
-CREATE TABLE leave (
+CREATE TABLE trace (
   username VARCHAR(20) NOT NULL,
   log_id INT NOT NULL
   PRIMARY KEY (user_id, log_id),
   FOREIGN KEY (username) REFERENCES user (username) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (log_id) REFERENCES log (log_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+```
+
+- offer：部门下设的课程
+
+```sql
+CREATE TABLE offer (
+  dept_id INT NOT NULL,
+  course_id CHAR(5) NOT NULL,
+  require VARCHAR(10) NOT NULL CHECK (require IN ("必修", "选修")),
+  PRIMARY KEY (dept_id, course_id),
+  FOREIGN KEY (dept_id) REFERENCES department (dept_id) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (course_id) REFERENCES course (course_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 ```
 

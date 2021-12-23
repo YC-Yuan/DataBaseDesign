@@ -132,3 +132,13 @@ CREATE TABLE trace (
   FOREIGN KEY (username) REFERENCES user (username) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (log_id) REFERENCES log (log_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+DROP TABLE IF EXISTS offer;
+CREATE TABLE offer (
+  dept_id INT NOT NULL,
+  course_id CHAR(5) NOT NULL,
+  require VARCHAR(10) NOT NULL CHECK (require IN ("必修", "选修")),
+  PRIMARY KEY (dept_id, course_id),
+  FOREIGN KEY (dept_id) REFERENCES department (dept_id) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (course_id) REFERENCES course (course_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
