@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template
 
-bp_route = Blueprint('route', __name__)
+bp_route = Blueprint('route', __name__, url_prefix="")
 
 
 # 所有render在此实现
