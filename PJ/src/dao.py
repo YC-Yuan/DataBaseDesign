@@ -1,6 +1,7 @@
 import pymysql as sql
 
 configs = []
+init_sql=[]
 
 with open("configs.txt", "r") as f:
     for line in f.readlines():
@@ -35,6 +36,8 @@ def init_tables():
     cursor = db.cursor()
     try:
         # 建表
+        # TODO
+
         pass
     except sql.MySQLError as e:
         print(e)
