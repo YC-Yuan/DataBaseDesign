@@ -1,4 +1,5 @@
 localhost
+3306
 root
 password
 database_pj1
