@@ -202,7 +202,7 @@ CREATE TABLE teach (
 );
 ```
 
-- charge：部门主管信息
+- charge：部门主管信息，user_id和dept_id设为unique保证一对一
 
 ```sql
 CREATE TABLE charge (
@@ -214,7 +214,7 @@ CREATE TABLE charge (
 );
 ```
 
-- trace：用户操作后留下的日志
+- trace：用户操作后留下的日志，log_id设为unique保证多对一
 
 ```sql
 CREATE TABLE trace (
@@ -226,8 +226,8 @@ CREATE TABLE trace (
 );
 ```
 
-- offer：部门下设的课程
-11441
+- offer：对部门开放的课程，要求为选修或必修
+
 ```sql
 CREATE TABLE offer (
   dept_id INT NOT NULL,
