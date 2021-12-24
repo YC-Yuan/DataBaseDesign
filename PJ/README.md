@@ -92,7 +92,7 @@ CREATE TABLE admin (
 
 - employee：雇员信息
 
-```sqlite
+```sql
 CREATE TABLE employee (
   user_id CHAR(11) NOT NULL,
   username VARCHAR(20) NOT NULL,
@@ -142,7 +142,7 @@ CREATE TABLE leader (
 
 - log：存储与管理日志信息的数据库表，主键为log_id。
 
-```sqlite
+```sql
 CREATE TABLE log (
   log_id INT NOT NULL AUTO_INCREMENT,
   operation VARCHAR(255) NOT NULL,
@@ -153,9 +153,9 @@ CREATE TABLE log (
 
 - belong：员工属于哪个部门
 
-```sqlite
+```sql
 CREATE TABLE belong (
-  user_id CHAR(11) NOT NULL,
+  user_id CHAR(11) NOT NULL UNIQUE,
   dept_id INT NOT NULL,
   PRIMARY KEY (user_id, dept_id),
   FOREIGN KEY (user_id) REFERENCES employee (user_id) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -165,7 +165,7 @@ CREATE TABLE belong (
 
 - take：普通员工选了哪个课
 
-```sqlite
+```sql
 CREATE TABLE take (
   user_id CHAR(11) NOT NULL,
   course_id CHAR(5) NOT NULL,
@@ -192,10 +192,10 @@ CREATE TABLE participate (
 
 - teach：
 
-```sqlite
+```sql
 CREATE TABLE teach (
   user_id CHAR(11) NOT NULL,
-  course_id CHAR(5) NOT NULL,
+  course_id CHAR(5) NOT NULL UNIQUE,
   PRIMARY KEY (user_id, course_id),
   FOREIGN KEY (user_id) REFERENCES instructor (user_id) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (course_id) REFERENCES course (course_id) ON DELETE CASCADE ON UPDATE CASCADE
@@ -204,10 +204,10 @@ CREATE TABLE teach (
 
 - charge：部门主管信息
 
-```sqlite
+```sql
 CREATE TABLE charge (
-  user_id CHAR(11) NOT NULL,
-  dept_id INT NOT NULL,
+  user_id CHAR(11) NOT NULL UNIQUE,
+  dept_id INT NOT NULL UNIQUE,
   PRIMARY KEY (user_id, dept_id),
   FOREIGN KEY (user_id) REFERENCES leader (user_id) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (dept_id) REFERENCES department (dept_id) ON DELETE CASCADE ON UPDATE CASCADE
@@ -216,11 +216,11 @@ CREATE TABLE charge (
 
 - trace：用户操作后留下的日志
 
-```sqlite
+```sql
 CREATE TABLE trace (
   username VARCHAR(20) NOT NULL,
-  log_id INT NOT NULL
-  PRIMARY KEY (user_id, log_id),
+  log_id INT NOT NULL UNIQUE,
+  PRIMARY KEY (username, log_id),
   FOREIGN KEY (username) REFERENCES user (username) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (log_id) REFERENCES log (log_id) ON DELETE CASCADE ON UPDATE CASCADE
 );

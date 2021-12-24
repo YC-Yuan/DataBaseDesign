@@ -36,7 +36,7 @@ CREATE TABLE employee (
   username VARCHAR(20) NOT NULL,
   name VARCHAR(20) NOT NULL,
   gender VARCHAR(10) NOT NULL CHECK (gender IN ("男", "女")),
-  age INTEGER NOT NULL,
+  age INTEGER NOT NULL CHECK (age >= 0),
   hire_date DATE NOT NULL,
   city VARCHAR(255) NOT NULL,
   telephone CHAR(11) NOT NULL,
@@ -72,13 +72,13 @@ DROP TABLE IF EXISTS log;
 CREATE TABLE log (
   log_id INT NOT NULL AUTO_INCREMENT,
   operation VARCHAR(255) NOT NULL,
-  date DATE NOT NULL,
+  date TIMESTAMP NOT NULL,
   PRIMARY KEY (log_id)
 );
 
 DROP TABLE IF EXISTS belong;
 CREATE TABLE belong (
-  user_id CHAR(11) NOT NULL,
+  user_id CHAR(11) NOT NULL UNIQUE,
   dept_id INT NOT NULL,
   PRIMARY KEY (user_id, dept_id),
   FOREIGN KEY (user_id) REFERENCES employee (user_id) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -109,7 +109,7 @@ CREATE TABLE participate (
 DROP TABLE IF EXISTS teach;
 CREATE TABLE teach (
   user_id CHAR(11) NOT NULL,
-  course_id CHAR(5) NOT NULL,
+  course_id CHAR(5) NOT NULL UNIQUE,
   PRIMARY KEY (user_id, course_id),
   FOREIGN KEY (user_id) REFERENCES instructor (user_id) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (course_id) REFERENCES course (course_id) ON DELETE CASCADE ON UPDATE CASCADE
@@ -117,8 +117,8 @@ CREATE TABLE teach (
 
 DROP TABLE IF EXISTS charge;
 CREATE TABLE charge (
-  user_id CHAR(11) NOT NULL,
-  dept_id INT NOT NULL,
+  user_id CHAR(11) NOT NULL UNIQUE,
+  dept_id INT NOT NULL UNIQUE,
   PRIMARY KEY (user_id, dept_id),
   FOREIGN KEY (user_id) REFERENCES leader (user_id) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (dept_id) REFERENCES department (dept_id) ON DELETE CASCADE ON UPDATE CASCADE
@@ -127,7 +127,7 @@ CREATE TABLE charge (
 DROP TABLE IF EXISTS trace;
 CREATE TABLE trace (
   username VARCHAR(20) NOT NULL,
-  log_id INT NOT NULL,
+  log_id INT NOT NULL UNIQUE,
   PRIMARY KEY (username, log_id),
   FOREIGN KEY (username) REFERENCES user (username) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (log_id) REFERENCES log (log_id) ON DELETE CASCADE ON UPDATE CASCADE
