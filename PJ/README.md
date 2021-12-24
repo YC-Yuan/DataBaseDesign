@@ -190,7 +190,7 @@ CREATE TABLE participate (
 );
 ```
 
-- teach：
+- teach：教师开设课程，course_id设为unique保证一对多
 
 ```sql
 CREATE TABLE teach (
