@@ -227,7 +227,7 @@ CREATE TABLE trace (
 ```
 
 - offer：部门下设的课程
-
+11441
 ```sql
 CREATE TABLE offer (
   dept_id INT NOT NULL,
