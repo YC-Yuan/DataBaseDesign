@@ -163,7 +163,7 @@ CREATE TABLE belong (
 );
 ```
 
-- take：普通员工选了哪个课
+- take：普通员工参与课程培训
 
 ```sql
 CREATE TABLE take (
@@ -176,7 +176,7 @@ CREATE TABLE take (
 );
 ```
 
-- participate
+- participate: 员工参加考试
 
 ```sql
 CREATE TABLE participate (
