@@ -1,25 +1,15 @@
+from constants.info import *
+from flask import Blueprint
+
+from dao import dao
 import pymysql as sql
-from PJ.flask.dbase.utils import *
-from PJ.flask.constants.info import *
-from flask import Blueprint, render_template
 
-admin = Blueprint('admin', __name__, url_prefix="/admin")
+bp_admin = Blueprint('admin', __name__, url_prefix="/admin")
 
-conn = get_db()
+conn = dao.get_db()
 ADMIN = "ADMIN"
 
 ''' 管理员相关功能 '''
-
-
-# 所有render在此实现
-@admin.route('/', methods=['GET'])
-def home():
-    return render_template('/login.html')
-
-
-@admin.route('/login', methods=['GET'])
-def login():
-    return render_template('/login.html')
 
 
 def get_employee_info():
@@ -174,5 +164,3 @@ def delete_log(log_id):
         conn.rollback()
     finally:
         cursor.close()
-
-

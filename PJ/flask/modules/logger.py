@@ -1,5 +1,4 @@
-import pymysql as sql
-from PJ.flask.dbase.utils import *
+from utils import *
 
 
 def logger(cursor, username, operation):

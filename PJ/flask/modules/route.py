@@ -13,6 +13,24 @@ def home():
 
 @bp_route.route('/login', methods=['GET'])
 def login():
-    return render_template('/login.html')
+    return home()
 
 
+def login_failed(msg):
+    return render_template('/login.html', msg=msg)
+
+
+def staff():
+    return render_template('/staff.html')
+
+
+def instructor():
+    return render_template('/instructor')
+
+
+def leader():
+    return render_template('/leader.html')
+
+
+def admin():
+    return render_template('/admin.html')
