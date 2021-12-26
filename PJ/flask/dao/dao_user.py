@@ -8,6 +8,8 @@ def has_user(username, password):
     sql = "select count(*) from user where username= %s and password= %s"
     cursor.execute(sql, (username, password))
     count = cursor.fetchall()[0][0]
+    cursor.close()
+    conn.close()
     return count > 0
 
 
@@ -18,6 +20,8 @@ def is_admin(username):
     sql = "select count(*) from admin where username= %s"
     cursor.execute(sql, (username,))
     count = cursor.fetchone()[0]
+    cursor.close()
+    conn.close()
     return count > 0
 
 
@@ -28,6 +32,8 @@ def is_staff(username):
     sql = "select count(*) from staff where username= %s"
     cursor.execute(sql, (username,))
     count = cursor.fetchone()[0]
+    cursor.close()
+    conn.close()
     return count > 0
 
 
@@ -37,6 +43,8 @@ def is_instructor(username):
     sql = "select count(*) from instructor where username= %s"
     cursor.execute(sql, (username,))
     count = cursor.fetchone()[0]
+    cursor.close()
+    conn.close()
     return count > 0
 
 
@@ -46,6 +54,8 @@ def is_leader(username):
     sql = "select count(*) from leader where username= %s"
     cursor.execute(sql, (username,))
     count = cursor.fetchone()[0]
+    cursor.close()
+    conn.close()
     return count > 0
 
 

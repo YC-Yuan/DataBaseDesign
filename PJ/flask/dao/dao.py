@@ -50,7 +50,9 @@ def get_db():
         exit(0)
 
 
-def get_dept_id(cursor, dept_name):
+def get_dept_id(dept_name):
+    conn = get_db()
+    cursor = conn.cursor()
     select_sql = "SELECT dept_id FROM department WHERE name = %s"
     cursor.execute(select_sql, (dept_name,))
     row = cursor.fetchone()
