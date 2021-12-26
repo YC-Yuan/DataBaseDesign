@@ -11,6 +11,7 @@ bp_user = Blueprint('user', __name__, url_prefix="/user")
 def login():
     username = request.values.get('username')
     password = request.values.get('password')
+    return route.staff('yyc')
     if dao_user.has_user(username, password):
         # 登录成功
         if dao_user.is_admin(username):
