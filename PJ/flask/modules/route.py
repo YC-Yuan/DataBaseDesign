@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template
-
+from DAO import dao_staff
+from DAO import dao
 bp_route = Blueprint('route', __name__, url_prefix="")
 
 
@@ -21,16 +22,9 @@ def login_failed(msg):
 
 # 获取员工信息传给前端
 def staff(username):
+    user_id = dao.get_user_id(username)
     # 查找个人信息
-    info = dict()
-    info['user_id'] = 19302010020
-    info['name'] = '袁逸聪'
-    info['geder'] = '男'
-    info['age'] = 20
-    info['hire_date'] = '2021 - 19 - 21'
-    info['city'] = '深圳'
-    info['telephone'] = 15001933144
-    info['email'] = '1534401580@qq.com'
+    info = dao_staff.get_user_info(user_id)
     # 查找课程与教员
     courses = []
     course = {
@@ -40,7 +34,6 @@ def staff(username):
         'start_time': '2021-19-12',
         'end_time': '2034-12-21',
         'instructor': '毅宝',
-        'department': '计算机开发部',
     }
     courses.append(course)
     # 查找历史上课信息
@@ -52,7 +45,6 @@ def staff(username):
         'start_time': '2018-1-12',
         'end_time': '2019-12-21',
         'instructor': '毅宝',
-        'department': '计算机开发部',
         'evaluation': '通过',
         'tests': [{
             'time': '2019-12-22',
@@ -62,7 +54,6 @@ def staff(username):
             'score': 80
         }, ]
     })
-
     return render_template('/staff.html',
                            info=info, courses=courses, history=history)
 

@@ -1,5 +1,5 @@
 import pymysql as sql
-from dao.config import *
+from DAO.config import *
 
 
 def init_db():
@@ -58,6 +58,28 @@ def get_dept_id(dept_name):
     row = cursor.fetchone()
     if row is None:
         raise sql.MySQLError("{} does not exist".format(dept_name))
+    return row[0]
+
+
+def get_user_id(username):
+    conn = get_db()
+    cursor = conn.cursor()
+    select_sql = "SELECT user_id FROM employee WHERE username = %s"
+    cursor.execute(select_sql, (username,))
+    row = cursor.fetchone()
+    if row is None:
+        raise sql.MySQLError("{} does not exist".format(username))
+    return row[0]
+
+
+def get_user_name(user_id):
+    conn = get_db()
+    cursor = conn.cursor()
+    select_sql = "SELECT name FROM employee WHERE user_id = %s"
+    cursor.execute(select_sql, (user_id,))
+    row = cursor.fetchone()
+    if row is None:
+        raise sql.MySQLError("{} does not exist".format(user_id))
     return row[0]
 
 

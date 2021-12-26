@@ -10,12 +10,14 @@ DROP TABLE IF EXISTS course;
 CREATE TABLE course
 (
     course_id  CHAR(5)      NOT NULL,
+    user_id   CHAR(11)     NOT NULL,
     name       VARCHAR(20)  NOT NULL,
     content    VARCHAR(255) NOT NULL,
     category   VARCHAR(20)  NOT NULL,
     start_time DATE         NOT NULL,
     end_time   DATE         NOT NULL,
-    PRIMARY KEY (course_id)
+    PRIMARY KEY (course_id),
+    FOREIGN KEY (user_id) REFERENCES instructor (user_id) ON DELETE CASCADE ON UPDATE CASCADE,
 );
 
 DROP TABLE IF EXISTS user;
@@ -80,9 +82,11 @@ DROP TABLE IF EXISTS log;
 CREATE TABLE log
 (
     log_id    INT          NOT NULL AUTO_INCREMENT,
+    username VARCHAR(20) NOT NULL,
     operation VARCHAR(255) NOT NULL,
     date      TIMESTAMP    NOT NULL,
-    PRIMARY KEY (log_id)
+    PRIMARY KEY (log_id),
+    FOREIGN KEY (username) REFERENCES user (username) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 DROP TABLE IF EXISTS belong;
@@ -100,7 +104,7 @@ CREATE TABLE take
 (
     user_id    CHAR(11) NOT NULL,
     course_id  CHAR(5)  NOT NULL,
-    evaluation VARCHAR(20),
+    evaluation VARCHAR(20) CHECK (evaluation IS NULL OR evaluation IN ("通过", "未通过")),
     PRIMARY KEY (user_id, course_id),
     FOREIGN KEY (user_id) REFERENCES staff (user_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (course_id) REFERENCES course (course_id) ON DELETE CASCADE ON UPDATE CASCADE
@@ -118,16 +122,6 @@ CREATE TABLE participate
     FOREIGN KEY (course_id) REFERENCES course (course_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-DROP TABLE IF EXISTS teach;
-CREATE TABLE teach
-(
-    user_id   CHAR(11) NOT NULL,
-    course_id CHAR(5)  NOT NULL UNIQUE,
-    PRIMARY KEY (user_id, course_id),
-    FOREIGN KEY (user_id) REFERENCES instructor (user_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (course_id) REFERENCES course (course_id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
 DROP TABLE IF EXISTS charge;
 CREATE TABLE charge
 (
@@ -136,16 +130,6 @@ CREATE TABLE charge
     PRIMARY KEY (user_id, dept_id),
     FOREIGN KEY (user_id) REFERENCES leader (user_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (dept_id) REFERENCES department (dept_id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-DROP TABLE IF EXISTS trace;
-CREATE TABLE trace
-(
-    username VARCHAR(20) NOT NULL,
-    log_id   INT         NOT NULL UNIQUE,
-    PRIMARY KEY (username, log_id),
-    FOREIGN KEY (username) REFERENCES user (username) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (log_id) REFERENCES log (log_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 DROP TABLE IF EXISTS offer;

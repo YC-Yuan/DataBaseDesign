@@ -1,9 +1,8 @@
 from constants.info import *
 import pymysql as sql
-from dao.dao import *
+from DAO.dao import *
 import utils
 
-ADMIN = "ADMIN"
 
 # 每个事务都要创建连接
 
@@ -133,12 +132,12 @@ def delete_Employee(username):
 '''
 
 
-def insert_Employee(username, pwd, user_id, name, gender, age, hire_date, city, telephone, email, dept_name,
+def insert_employee(username, pwd, user_id, name, gender, age, hire_date, city, telephone, email, dept_name,
                  role=STAFF, office_date=None):
     try:
         conn = get_db()
         cursor = conn.cursor()
-        dept_id = get_dept_id(cursor, dept_name)
+        dept_id = get_dept_id(dept_name)
         hire_date = utils.string_to_date(hire_date)
         insert_sql = "INSERT INTO user VALUES(%s, %s);"
         cursor.execute(insert_sql, (username, pwd,))

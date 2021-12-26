@@ -1,4 +1,4 @@
-from dao import dao
+from DAO import dao
 from constants import info
 
 
@@ -25,34 +25,33 @@ def is_admin(username):
     return count > 0
 
 
-
-def is_staff(username):
+def is_staff(user_id):
     conn = dao.get_db()
     cursor = conn.cursor()
-    sql = "select count(*) from staff where username= %s"
-    cursor.execute(sql, (username,))
+    sql = "select count(*) from employee where user_id= %s"
+    cursor.execute(sql, (user_id,))
     count = cursor.fetchone()[0]
     cursor.close()
     conn.close()
     return count > 0
 
 
-def is_instructor(username):
+def is_instructor(user_id):
     conn = dao.get_db()
     cursor = conn.cursor()
-    sql = "select count(*) from instructor where username= %s"
-    cursor.execute(sql, (username,))
+    sql = "select count(*) from instructor where user_id= %s"
+    cursor.execute(sql, (user_id,))
     count = cursor.fetchone()[0]
     cursor.close()
     conn.close()
     return count > 0
 
 
-def is_leader(username):
+def is_leader(user_id):
     conn = dao.get_db()
     cursor = conn.cursor()
-    sql = "select count(*) from leader where username= %s"
-    cursor.execute(sql, (username,))
+    sql = "select count(*) from leader where user_id= %s"
+    cursor.execute(sql, (user_id,))
     count = cursor.fetchone()[0]
     cursor.close()
     conn.close()
@@ -62,9 +61,10 @@ def is_leader(username):
 def get_role_by_username(username):
     if is_admin(username):
         return info.ADMIN
-    if is_staff(username):
+    user_id = dao.get_user_id(username)
+    if is_staff(user_id):
         return info.STAFF
-    if is_instructor(username):
+    if is_instructor(user_id):
         return info.INSTRUCTOR
-    if is_leader(username):
+    if is_leader(user_id):
         return info.LEADER
