@@ -6,20 +6,6 @@ CREATE TABLE department
     PRIMARY KEY (dept_id)
 );
 
-DROP TABLE IF EXISTS course;
-CREATE TABLE course
-(
-    course_id  CHAR(5)      NOT NULL,
-    user_id   CHAR(11)     NOT NULL,
-    name       VARCHAR(20)  NOT NULL,
-    content    VARCHAR(255) NOT NULL,
-    category   VARCHAR(20)  NOT NULL,
-    start_time DATE         NOT NULL,
-    end_time   DATE         NOT NULL,
-    PRIMARY KEY (course_id),
-    FOREIGN KEY (user_id) REFERENCES instructor (user_id) ON DELETE CASCADE ON UPDATE CASCADE,
-);
-
 DROP TABLE IF EXISTS user;
 CREATE TABLE user
 (
@@ -76,6 +62,20 @@ CREATE TABLE leader
     office_date DATE     NOT NULL,
     FOREIGN KEY (user_id) REFERENCES employee (user_id) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (user_id)
+);
+
+DROP TABLE IF EXISTS course;
+CREATE TABLE course
+(
+    course_id  CHAR(5)      NOT NULL,
+    user_id    CHAR(11)     NOT NULL,
+    name       VARCHAR(20)  NOT NULL,
+    content    VARCHAR(255) NOT NULL,
+    category   VARCHAR(20)  NOT NULL,
+    start_time DATE         NOT NULL,
+    end_time   DATE         NOT NULL,
+    PRIMARY KEY (course_id),
+    FOREIGN KEY (user_id) REFERENCES instructor (user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 DROP TABLE IF EXISTS log;
