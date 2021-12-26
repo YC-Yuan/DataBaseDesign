@@ -13,22 +13,40 @@ def has_user(username, password):
 
 def is_admin(username):
     # TODO
-    pass
+    conn = dao.get_db()
+    cursor = conn.cursor()
+    sql = "select count(*) from admin where username= %s"
+    cursor.execute(sql, (username,))
+    count = cursor.fetchone()[0]
+    return count > 0
+
 
 
 def is_staff(username):
-    # TODO
-    pass
+    conn = dao.get_db()
+    cursor = conn.cursor()
+    sql = "select count(*) from staff where username= %s"
+    cursor.execute(sql, (username,))
+    count = cursor.fetchone()[0]
+    return count > 0
 
 
 def is_instructor(username):
-    # TODO
-    pass
+    conn = dao.get_db()
+    cursor = conn.cursor()
+    sql = "select count(*) from instructor where username= %s"
+    cursor.execute(sql, (username,))
+    count = cursor.fetchone()[0]
+    return count > 0
 
 
 def is_leader(username):
-    # TODO
-    pass
+    conn = dao.get_db()
+    cursor = conn.cursor()
+    sql = "select count(*) from leader where username= %s"
+    cursor.execute(sql, (username,))
+    count = cursor.fetchone()[0]
+    return count > 0
 
 
 def get_role_by_username(username):
