@@ -168,16 +168,14 @@ def insert_staff(cursor, user_id):
 
 def insert_instructor(cursor, user_id, office_date):
     office_date = utils.string_to_date(office_date)
-    insert_sql = "INSERT INTO instructor VALUE (%s, %s);"
+    insert_sql = "INSERT INTO instructor VALUES (%s, %s);"
     cursor.execute(insert_sql, (user_id, office_date,))
 
 
 def insert_leader(cursor, user_id, office_date, dept_name):
     office_date = utils.string_to_date(office_date)
-    insert_sql = "INSERT INTO leader VALUE (%s, %s);"
-    cursor.execute(insert_sql, (user_id, office_date,))
-    insert_sql = "INSERT INTO charge VALUES (%s, %s);"
-    cursor.execute(insert_sql, (user_id, dept_name))
+    insert_sql = "INSERT INTO leader VALUES (%s, %s, %s);"
+    cursor.execute(insert_sql, (user_id, office_date, dept_name,))
 
 
 '''
@@ -192,9 +190,10 @@ def insert_course(instructor_id, course_id, name, content, category, start_time,
         cursor = conn.cursor()
         start_time = utils.string_to_date(start_time)
         end_time = utils.string_to_date(end_time)
-        insert_sql = "INSERT INTO course VALUE (%s, %s, %s, %s, %s, %s, %s);"
+        insert_sql = "INSERT INTO course VALUES (%s, %s, %s, %s, %s, %s, %s);"
         cursor.execute(insert_sql, (course_id, name, content, category, start_time, end_time, instructor_id,))
         conn.commit()
+        print("Admin add_course " + course_id)
     except sql.MySQLError as e:
         print(e)
         conn.rollback()
@@ -210,18 +209,33 @@ def set_course_require(course_id, dept_name, require):
         conn = get_db()
         cursor = conn.cursor()
         dept_id = get_dept_id(dept_name)
+        #   取消课程
         if require == DISABLE:
-            delete_sql = "DELETE FROM offer WHERE course_id = %s AND dept_id = %"
+            delete_sql = "DELETE FROM offer WHERE course_id = %s AND dept_id = %s"
             cursor.execute(delete_sql, (course_id, dept_id,))
         else:
             select_sql = "SELECT COUNT(*) FROM offer WHERE course_id = %s AND dept_id = %s"
             cursor.execute(select_sql, (course_id, dept_id,))
+            #   修改要求
             if cursor.fetchone()[0] > 0:
                 update_sql = "UPDATE offer SET need = %s WHERE course_id = %s AND dept_id = %s"
                 cursor.execute(update_sql, (require, course_id, dept_id,))
+            #   增加要求
             else:
-                insert_sql = "INSERT INTO offer VALUE (%s, %s, %s);"
-                cursor.execute(insert_sql, (course_id, dept_id, require,))
+                insert_sql = "INSERT INTO offer VALUES (%s, %s, %s);"
+                cursor.execute(insert_sql, (dept_id, course_id, require,))
+            #   必修课
+            if require == MANDATORY:
+                select_sql = "SELECT user_id FROM employee AS e WHERE e.dept_name = %s " \
+                             "AND EXISTS (SELECT user_id FROM staff AS s WHERE s.user_id = e.user_id)"
+                cursor.execute(select_sql, (dept_name,))
+                rows = cursor.fetchall()
+                for row in rows:
+                    user_id = row[0]
+                    insert_sql = "INSERT INTO take (user_id, course_id) SELECT %s, %s FROM dual WHERE NOT EXISTS " \
+                                 "(SELECT * FROM take WHERE user_id = %s AND course_id = %s)"
+                    cursor.execute(insert_sql, (user_id, course_id, user_id, course_id,))
+        print("Admin set_course " + course_id + " " + require + " " + dept_name)
         conn.commit()
     except sql.MySQLError as e:
         print(e)
