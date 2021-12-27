@@ -9,3 +9,5 @@ DISABLE = "不可选"
 
 PASSED = "通过"
 FAILED = "未通过"
+
+PASS_LINE = 60

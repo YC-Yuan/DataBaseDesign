@@ -114,8 +114,7 @@ CREATE TABLE participate
     time      TIMESTAMP NOT NULL,
     score     INT       NOT NULL CHECK (score >= 0 AND score <= 100),
     PRIMARY KEY (user_id, course_id, time),
-    FOREIGN KEY (user_id) REFERENCES staff (user_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (course_id) REFERENCES course (course_id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (user_id, course_id) REFERENCES take (user_id, course_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 

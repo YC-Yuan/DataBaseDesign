@@ -1,5 +1,6 @@
 import datetime
 import time
+from constants.info import *
 
 
 #   字符串转日期
@@ -19,17 +20,23 @@ def string_to_timestamp(string):
 
 #   时间戳转字符串
 def timestamp_to_string(timestamp):
-    return datetime.datetime.fromtimestamp(timestamp)
+    return timestamp.strftime('%Y-%m-%d %H:%M:%S')
 
 
 #   获取当前时间戳
 def get_current_timestamp():
-    return datetime.datetime.now().timestamp()
+    return datetime.datetime.now()
+
+
+#   获取当前时间戳
+def get_current_date():
+    return datetime.datetime.now() - datetime.timedelta(days=1)
 
 
 #   检测是否结课
 def check_course_end(date):
-    return datetime.datetime.now() > (date + datetime.timedelta(days=1))
+    return (datetime.datetime.now() - datetime.timedelta(days=1)).date() >= date
+
 
 def dict_fetch_one(cursor):
     columns = [col[0] for col in cursor.description]
@@ -49,5 +56,3 @@ def dict_fetch_all(cursor):
         dict(zip(columns, row))
         for row in cursor.fetchall()
     ]
-
-

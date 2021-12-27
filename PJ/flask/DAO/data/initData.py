@@ -20,3 +20,5 @@ set_course_require('33160', '策划部门', MANDATORY)
 set_course_require('35142', '开发部门', MANDATORY)
 set_course_require('35142', '策划部门', OPTIONAL)
 set_course_require('35155', '开发部门', OPTIONAL)
+
+update_courses()

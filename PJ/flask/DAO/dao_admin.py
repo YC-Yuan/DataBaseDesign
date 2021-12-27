@@ -261,6 +261,24 @@ def delete_course(course_id):
         conn.close()
 
 
+#   更新课程状态（指结课）
+def update_courses():
+    try:
+        conn = get_db()
+        cursor = conn.cursor()
+        update_sql = "UPDATE take SET evaluation = %s WHERE evaluation IS NULL AND course_id IN " \
+                     "(SELECT course_id FROM course WHERE end_time <= %s)"
+        cursor.execute(update_sql, (FAILED, utils.get_current_date(),))
+        conn.commit()
+        print("UPDATE")
+    except sql.MySQLError as e:
+        print(e)
+        conn.rollback()
+    finally:
+        cursor.close()
+        conn.close()
+
+
 '''
     日志相关操作
 '''
