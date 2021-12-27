@@ -1,4 +1,4 @@
-from DAO.dao_admin import *
+from dao.dao_admin import *
 
 
 insert_employee('18307110072', 'password', '18307110072', '赵书誉', '男', 22, '2018-9-10', '上海', '13681981193', '2011710343@qq.com', '策划部门', LEADER, '2020-3-15')
