@@ -16,25 +16,66 @@
                 <div class="list-group" id="list-tab" role="tablist">
                     <a class="list-group-item list-group-item-action active"
                        id="list-home-list" data-toggle="list"
-                       href="#list-info" role="tab" aria-controls="Info">Info</a>
+                       href="#list-info" role="tab" aria-controls="Info">个人信息</a>
                     <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list"
-                       href="#list-course" role="tab" aria-controls="profile">Course</a>
+                       href="#list-course" role="tab" aria-controls="profile">在读课程</a>
                     <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list"
-                       href="#list-history" role="tab" aria-controls="messages">History</a>
+                       href="#list-history" role="tab" aria-controls="messages">历史课程</a>
                 </div>
             </div>
             <div class="col-9">
                 <div class="tab-content" id="nav-tabContent">
                     <div class="tab-pane fade show active" id="list-info" role="tabpanel"
                          aria-labelledby="list-home-list">
-                        {{ info }}
+                        {# 个人info表单 #}
+                        <table class="table table-bordered">
+                            <tbody>
+                            <tr>
+                                <th>员工号</th>
+                                <td>{{ info.user_id }}</td>
+                            </tr>
+                            <tr>
+                                <th>用户名</th>
+                                <td>{{ info.username }}</td>
+                            </tr>
+                            <tr>
+                                <th>姓名</th>
+                                <td>{{ info.name }}</td>
+                            </tr>
+                            <tr>
+                                <th>性别</th>
+                                <td>{{ info.gender }}</td>
+                            </tr>
+                            <tr>
+                                <th>入职日期</th>
+                                <td>{{ info.hire_date }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <form action="{{ url_for('user.info_modify') }}" method="post">
+                            <div class="form-group">
+                                <label for="city">所在城市</label>
+                                <input type="text" name="city" class="form-control" id="city"
+                                       value="{{ info.city }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="telephone">个人电话</label>
+                                <input type="text" name="telephone" class="form-control" id="telephone"
+                                       value="{{ info.telephone }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">电子邮箱</label>
+                                <input type="email" name="email" class="form-control" id="email"
+                                       value="{{ info.email }}">
+                            </div>
+                            <button type="submit" class="btn btn-primary">修改个人信息</button>
+                        </form>
                     </div>
                     <div class="tab-pane fade" id="list-course" role="tabpanel" aria-labelledby="list-profile-list">
-                        <table class="table">
+                        <table class="table table-bordered">
                             <thead>
                             <tr>
                                 <th scope="col">课程</th>
-                                <th scope="col">部门</th>
                                 <th scope="col">教员</th>
                                 <th scope="col">起止时间</th>
                             </tr>
@@ -43,7 +84,6 @@
                             {% for course in courses %}
                                 <tr>
                                     <th scope="row">{{ course.name }}</th>
-                                    <td>{{ course.department }}</td>
                                     <td>{{ course.instructor }}</td>
                                     <td>{{ course.start_time }}-{{ course.end_time }}</td>
                                 </tr>

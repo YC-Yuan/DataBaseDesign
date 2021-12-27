@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template
 from dao import dao_staff
 from dao import dao
+
 bp_route = Blueprint('route', __name__, url_prefix="")
 
 
@@ -21,8 +22,7 @@ def login_failed(msg):
 
 
 # 获取员工信息传给前端
-def staff(username):
-    user_id = dao.get_user_id(username)
+def staff(user_id):
     # 查找个人信息
     info = dao_staff.get_user_info(user_id)
     # 查找课程与教员
@@ -58,13 +58,13 @@ def staff(username):
                            info=info, courses=courses, history=history)
 
 
-def instructor():
+def instructor(user_id):
     return render_template('/instructor')
 
 
-def leader():
+def leader(user_id):
     return render_template('/leader.html')
 
 
-def admin():
+def admin(username):
     return render_template('/admin.html')

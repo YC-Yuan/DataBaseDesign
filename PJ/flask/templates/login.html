@@ -11,12 +11,12 @@
     {% endif %}
 <div class="container">
     <div class="jumbotron mt-2">
-        <h1 class="display-4">Login</h1>
+        <h1 class="display-4">登录</h1>
         <hr class="my-4">
         <div class="card border-dark mx-auto" style="max-width: 40rem;">
             <form action="{{ url_for('user.login') }}" method="post" class="p-3">
                 <div class="form-group">
-                    <label for="username">Username</label>
+                    <label for="username">用户名</label>
                     <input class="form-control" id="username" placeholder="username here" name="username">
                 </div>
                 <div class="form-group">
@@ -24,7 +24,7 @@
                     <input type="password" class="form-control" id="password" placeholder="password here"
                            name="password">
                 </div>
-                <button type="submit" class="btn btn-primary">login</button>
+                <button type="submit" class="btn btn-primary">登录</button>
             </form>
         </div>
     </div>
