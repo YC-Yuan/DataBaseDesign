@@ -1,4 +1,4 @@
-from dao_admin import *
+from dao.dao_admin import *
 
 
 def init_data():

@@ -1,6 +1,6 @@
 import pymysql as sql
-from config import *
-import init_data
+from dao.config import *
+import dao.init_data
 
 
 def init_db():
@@ -17,26 +17,45 @@ def init_db():
     db.close()
 
 
-def execute_sql_file(f):
-    db = get_db()
-    cursor = db.cursor()
+# 执行无返回的sql语句
+def execute_sql(cmd):
+    conn = get_db()
+    cursor = conn.cursor()
     try:
-        sql_list = f.read().split(';')[:-1]
-        for x in sql_list:
-            if '\n' in x:
-                # 脚本换行处替换为空格
-                x = x.replace('\n', ' ')
-            x += ';'
-            print(x)
-            cursor.execute(x)
-        db.commit()
+        print("执行无返回的sql语句:%s" % cmd)
+        cursor.execute(cmd)
+        conn.commit()
     except sql.MySQLError as e:
         print(e)
-        db.rollback()
+        conn.rollback()
+    finally:
+        cursor.close()
+        conn.close()
+
+
+# 批量执行无返回的sql语句
+def execute_sql_list(cmd_list):
+    conn = get_db()
+    cursor = conn.cursor()
+    try:
+        print("执行无返回的sql list")
+        for cmd in cmd_list:
+            print("执行无返回的sql语句:%s" % cmd)
+            cursor.execute(cmd)
+        print("list执行完毕")
+        conn.commit()
+    except sql.MySQLError as e:
+        print(e)
+        conn.rollback()
         exit(0)
     finally:
         cursor.close()
-        db.close()
+        conn.close()
+
+
+def execute_sql_file(f):
+    sql_list = f.read().split(';')[:-1]
+    execute_sql_list(sql_list)
 
 
 def init_tables():
@@ -61,39 +80,6 @@ def get_db():
     except sql.MySQLError as e:
         print(e)
         exit(0)
-
-
-def get_dept_id(dept_name):
-    conn = get_db()
-    cursor = conn.cursor()
-    select_sql = "SELECT dept_id FROM department WHERE name = %s"
-    cursor.execute(select_sql, (dept_name,))
-    row = cursor.fetchone()
-    if row is None:
-        raise sql.MySQLError("{} does not exist".format(dept_name))
-    return row[0]
-
-
-def get_user_id(username):
-    conn = get_db()
-    cursor = conn.cursor()
-    select_sql = "SELECT user_id FROM employee WHERE username = %s"
-    cursor.execute(select_sql, (username,))
-    row = cursor.fetchone()
-    if row is None:
-        raise sql.MySQLError("{} does not exist".format(username))
-    return row[0]
-
-
-def get_user_name(user_id):
-    conn = get_db()
-    cursor = conn.cursor()
-    select_sql = "SELECT name FROM employee WHERE user_id = %s"
-    cursor.execute(select_sql, (user_id,))
-    row = cursor.fetchone()
-    if row is None:
-        raise sql.MySQLError("{} does not exist".format(user_id))
-    return row[0]
 
 
 if __name__ == '__main__':

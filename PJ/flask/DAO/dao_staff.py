@@ -1,33 +1,31 @@
-import datetime
-
 from constants.info import *
+from dao import dao_user, dao_core
 import pymysql as sql
-from dao.dao_core import *
 import utils
 
 
 #   获取用户信息
 def get_user_info(user_id):
+    conn = dao_core.get_db()
+    cursor = conn.cursor()
     try:
-        conn = get_db()
-        cursor = conn.cursor()
         select_sql = "SELECT * FROM employee WHERE user_id = %s"
         cursor.execute(select_sql, (user_id,))
         info = utils.dict_fetch_one(cursor)
         info['hire_date'] = utils.date_to_string(info['hire_date'])
+        return info
     except sql.MySQLError as e:
         print(e)
     finally:
         cursor.close()
         conn.close()
-        return info
 
 
 #   获取用户课程信息
 def get_take_courses(user_id):
+    conn = dao_core.get_db()
+    cursor = conn.cursor()
     try:
-        conn = get_db()
-        cursor = conn.cursor()
         #   未完成
         courses = []
         #   已完成
@@ -42,7 +40,7 @@ def get_take_courses(user_id):
             course = utils.dict_fetch_one(cursor)
             course['start_time'] = utils.date_to_string(course['start_time'])
             course['end_time'] = utils.date_to_string(course['end_time'])
-            course['instructor'] = get_user_name(course['user_id'])
+            course['instructor'] = dao_user.get_user_name(course['user_id'])
             course.pop('user_id')
             #   已通过的课程
             if row[2] is not None and row[2] == PASSED:
@@ -58,9 +56,9 @@ def get_take_courses(user_id):
             #   未完成的课程
             else:
                 courses.append(course)
+        return courses, history
     except sql.MySQLError as e:
         print(e)
     finally:
         cursor.close()
         conn.close()
-        return courses, history

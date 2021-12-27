@@ -1,5 +1,28 @@
 from dao import dao_core
 from constants import info
+import pymysql as sql
+
+
+def get_user_id(username):
+    conn = dao_core.get_db()
+    cursor = conn.cursor()
+    select_sql = "SELECT user_id FROM employee WHERE username = %s"
+    cursor.execute(select_sql, (username,))
+    row = cursor.fetchone()
+    if row is None:
+        raise sql.MySQLError("{} does not exist".format(username))
+    return row[0]
+
+
+def get_user_name(user_id):
+    conn = dao_core.get_db()
+    cursor = conn.cursor()
+    select_sql = "SELECT name FROM employee WHERE user_id = %s"
+    cursor.execute(select_sql, (user_id,))
+    row = cursor.fetchone()
+    if row is None:
+        raise sql.MySQLError("{} does not exist".format(user_id))
+    return row[0]
 
 
 def has_user(username, password):
@@ -61,7 +84,7 @@ def is_leader(user_id):
 def get_role_by_username(username):
     if is_admin(username):
         return info.ADMIN
-    user_id = dao_core.get_user_id(username)
+    user_id = get_user_id(username)
     if is_staff(user_id):
         return info.STAFF
     if is_instructor(user_id):

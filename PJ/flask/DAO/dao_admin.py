@@ -207,7 +207,7 @@ def set_course_require(course_id, dept_name, require):
     conn = get_db()
     cursor = conn.cursor()
     try:
-        dept_id = get_dept_id(dept_name)
+        dept_id = dao_dept.get_dept_id(dept_name)
         #   取消课程
         if require == DISABLE:
             delete_sql = "DELETE FROM offer WHERE course_id = %s AND dept_id = %s"
