@@ -1,5 +1,5 @@
 HOST = "localhost"
 PORT = 3306
-USER = "root"
-PWD = "DyingFish233"
+USER = "database_design"
+PWD = "database_design"
 DB_NAME = "database_pj1"

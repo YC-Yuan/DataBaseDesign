@@ -1,5 +1,5 @@
 import pymysql as sql
-from DAO.config import *
+from dao.config import *
 
 
 def init_db():

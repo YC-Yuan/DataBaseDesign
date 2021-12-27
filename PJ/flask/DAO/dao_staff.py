@@ -2,7 +2,7 @@ import datetime
 
 from constants.info import *
 import pymysql as sql
-from DAO.dao import *
+from dao.dao import *
 import utils
 
 
