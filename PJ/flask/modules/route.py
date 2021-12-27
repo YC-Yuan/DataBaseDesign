@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template
-from DAO import dao_staff
-from DAO import dao
+from dao import dao_staff
+from dao import dao
 bp_route = Blueprint('route', __name__, url_prefix="")
 
 

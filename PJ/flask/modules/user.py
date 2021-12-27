@@ -1,8 +1,8 @@
 # user 后端服务
 
 from flask import Blueprint, request
-from DAO import dao
-from DAO import dao_user
+from dao import dao
+from dao import dao_user
 from modules import route
 
 bp_user = Blueprint('user', __name__, url_prefix="/user")
