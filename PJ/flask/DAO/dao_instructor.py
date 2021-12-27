@@ -115,6 +115,11 @@ def score_input(user_id, course_id, score):
         cursor.execute(select_sql, (course_id,))
         row = cursor.fetchone()
         if utils.check_course_end(row[0]):
+            select_sql = "SELECT evaluation FROM take WHERE user_id = %s AND course_id = %s"
+            cursor.execute(select_sql, (user_id, course_id,))
+            eva = cursor.fetchone()[0]
+            if eva == PASSED:
+                raise sql.MySQLError("禁止卷逼刷分")
             insert_sql = "INSERT INTO participate VALUES (%s, %s, %s, %s)"
             cursor.execute(insert_sql, (user_id, course_id, utils.get_current_timestamp(), score,))
             #   及格则自动修改状态
@@ -130,5 +135,3 @@ def score_input(user_id, course_id, score):
     finally:
         cursor.close()
         conn.close()
-
-
