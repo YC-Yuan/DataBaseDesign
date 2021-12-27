@@ -1,6 +1,5 @@
 from constants.info import *
-import pymysql as sql
-from DAO.dao import *
+from dao.dao import *
 import utils
 
 # 每个事务都要创建连接
@@ -10,9 +9,9 @@ import utils
 
 
 def get_employee_info():
+    conn = get_db()
+    cursor = conn.cursor()
     try:
-        conn = get_db()
-        cursor = conn.cursor()
         select_sql = "SELECT * FROM employee;"
         cursor.execute(select_sql)
         rows = cursor.fetchall()
@@ -26,9 +25,9 @@ def get_employee_info():
 
 
 def get_course_info():
+    conn = get_db()
+    cursor = conn.cursor()
     try:
-        conn = get_db()
-        cursor = conn.cursor()
         select_sql = "SELECT * FROM course;"
         cursor.execute(select_sql)
         rows = cursor.fetchall()
@@ -42,9 +41,9 @@ def get_course_info():
 
 
 def get_log_info():
+    conn = get_db()
+    cursor = conn.cursor()
     try:
-        conn = get_db()
-        cursor = conn.cursor()
         select_sql = "SELECT * FROM log;"
         cursor.execute(select_sql)
         rows = cursor.fetchall()
@@ -63,16 +62,16 @@ def get_log_info():
 
 
 #   按姓名查询员工信息
-def search_staff_by_name(name):
+def search_employee_by_name(name):
+    conn = get_db()
+    cursor = conn.cursor()
     try:
-        conn = get_db()
-        cursor = conn.cursor()
-        select_sql = "SELECT * FROM staff WHERE name = %s"
+        select_sql = "SELECT * FROM employee WHERE name = %s"
         cursor.execute(select_sql, (name,))
-        staff_info = cursor.fetchall()
+        e_info = cursor.fetchall()
         take_info = []
-        for staff in staff_info:
-            user_id = staff[0]
+        for employee in e_info:
+            user_id = employee[0]
             select_sql = "SELECT * FROM take WHERE user_id = %s"
             cursor.execute(select_sql, (user_id,))
             take_info.append(cursor.fetchone())
@@ -86,10 +85,10 @@ def search_staff_by_name(name):
 
 
 #   按员工号查询员工信息
-def search_staff_by_name(user_id):
+def search_employee_by_uid(user_id):
+    conn = get_db()
+    cursor = conn.cursor()
     try:
-        conn = get_db()
-        cursor = conn.cursor()
         select_sql = "SELECT * FROM staff WHERE user_id = %s"
         cursor.execute(select_sql, (user_id,))
         staff_info = cursor.fetchone()
@@ -106,10 +105,10 @@ def search_staff_by_name(user_id):
 
 
 #   删除用户
-def delete_Employee(username):
+def delete_employee(username):
+    conn = get_db()
+    cursor = conn.cursor()
     try:
-        conn = get_db()
-        cursor = conn.cursor()
         delete_sql = "DELETE FROM user WHERE username = %s"
         cursor.execute(delete_sql, (username,))
         conn.commit()
@@ -133,9 +132,9 @@ def delete_Employee(username):
 
 def insert_employee(username, pwd, user_id, name, gender, age, hire_date, city, telephone, email, dept_name,
                     role=STAFF, office_date=None):
+    conn = get_db()
+    cursor = conn.cursor()
     try:
-        conn = get_db()
-        cursor = conn.cursor()
         hire_date = utils.string_to_date(hire_date)
         insert_sql = "INSERT INTO user VALUES(%s, %s);"
         cursor.execute(insert_sql, (username, pwd,))
@@ -185,9 +184,9 @@ def insert_leader(cursor, user_id, office_date, dept_name):
 
 #   添加课程
 def insert_course(instructor_id, course_id, name, content, category, start_time, end_time):
+    conn = get_db()
+    cursor = conn.cursor()
     try:
-        conn = get_db()
-        cursor = conn.cursor()
         start_time = utils.string_to_date(start_time)
         end_time = utils.string_to_date(end_time)
         insert_sql = "INSERT INTO course VALUES (%s, %s, %s, %s, %s, %s, %s);"
@@ -205,9 +204,9 @@ def insert_course(instructor_id, course_id, name, content, category, start_time,
 #   设置课程要求
 #   require: obligatory(必修) elective(选修) disable(不可选)
 def set_course_require(course_id, dept_name, require):
+    conn = get_db()
+    cursor = conn.cursor()
     try:
-        conn = get_db()
-        cursor = conn.cursor()
         dept_id = get_dept_id(dept_name)
         #   取消课程
         if require == DISABLE:
@@ -247,9 +246,9 @@ def set_course_require(course_id, dept_name, require):
 
 #   删除课程
 def delete_course(course_id):
+    conn = get_db()
+    cursor = conn.cursor()
     try:
-        conn = get_db()
-        cursor = conn.cursor()
         delete_sql = "DELETE FROM course WHERE course_id = %s"
         cursor.execute(delete_sql, (course_id,))
         conn.commit()
@@ -263,9 +262,9 @@ def delete_course(course_id):
 
 #   更新课程状态（指结课）
 def update_courses():
+    conn = get_db()
+    cursor = conn.cursor()
     try:
-        conn = get_db()
-        cursor = conn.cursor()
         update_sql = "UPDATE take SET evaluation = %s WHERE evaluation IS NULL AND course_id IN " \
                      "(SELECT course_id FROM course WHERE end_time <= %s)"
         cursor.execute(update_sql, (FAILED, utils.get_current_date(),))
@@ -286,9 +285,9 @@ def update_courses():
 
 #   添加日志
 def insert_log(operation, date):
+    conn = get_db()
+    cursor = conn.cursor()
     try:
-        conn = get_db()
-        cursor = conn.cursor()
         update_sql = "INSERT INTO log (operation, date) VALUES (%s, %s)"
         cursor.execute(update_sql, (operation, utils.string_to_timestamp(date),))
         conn.commit()
@@ -302,9 +301,9 @@ def insert_log(operation, date):
 
 #   修改日志
 def modify_log(log_id, operation):
+    conn = get_db()
+    cursor = conn.cursor()
     try:
-        conn = get_db()
-        cursor = conn.cursor()
         update_sql = "UPDATE log SET operation = %s WHERE log_id = %s"
         cursor.execute(update_sql, (operation, log_id,))
         conn.commit()
@@ -318,9 +317,9 @@ def modify_log(log_id, operation):
 
 #   删除日志
 def delete_log(log_id):
+    conn = get_db()
+    cursor = conn.cursor()
     try:
-        conn = get_db()
-        cursor = conn.cursor()
         delete_sql = "DELETE FROM log WHERE log_id = %s"
         cursor.execute(delete_sql, (log_id,))
         conn.commit()
