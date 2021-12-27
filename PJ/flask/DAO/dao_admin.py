@@ -3,7 +3,6 @@ import pymysql as sql
 from DAO.dao import *
 import utils
 
-
 # 每个事务都要创建连接
 
 
@@ -133,18 +132,15 @@ def delete_Employee(username):
 
 
 def insert_employee(username, pwd, user_id, name, gender, age, hire_date, city, telephone, email, dept_name,
-                 role=STAFF, office_date=None):
+                    role=STAFF, office_date=None):
     try:
         conn = get_db()
         cursor = conn.cursor()
-        dept_id = get_dept_id(dept_name)
         hire_date = utils.string_to_date(hire_date)
         insert_sql = "INSERT INTO user VALUES(%s, %s);"
         cursor.execute(insert_sql, (username, pwd,))
-        insert_sql = "INSERT INTO employee VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s);"
-        cursor.execute(insert_sql, (user_id, username, name, gender, age, hire_date, city, telephone, email,))
-        insert_sql = "INSERT INTO belong VALUES(%s, %s);"
-        cursor.execute(insert_sql, (user_id, dept_id,))
+        insert_sql = "INSERT INTO employee VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
+        cursor.execute(insert_sql, (user_id, username, name, gender, age, hire_date, city, telephone, email, dept_name))
         if role == STAFF:
             insert_staff(cursor, user_id)
             print("Admin add_staff " + user_id)
@@ -152,7 +148,7 @@ def insert_employee(username, pwd, user_id, name, gender, age, hire_date, city, 
             insert_instructor(cursor, user_id, office_date)
             print("Admin add_instructor " + user_id)
         elif role == LEADER:
-            insert_leader(cursor, user_id, office_date, dept_id)
+            insert_leader(cursor, user_id, office_date, dept_name)
             print("Admin add_leader " + user_id)
         else:
             raise sql.MySQLError("Invalid Role")
@@ -176,12 +172,12 @@ def insert_instructor(cursor, user_id, office_date):
     cursor.execute(insert_sql, (user_id, office_date,))
 
 
-def insert_leader(cursor, user_id, office_date, dept_id):
+def insert_leader(cursor, user_id, office_date, dept_name):
     office_date = utils.string_to_date(office_date)
     insert_sql = "INSERT INTO leader VALUE (%s, %s);"
     cursor.execute(insert_sql, (user_id, office_date,))
     insert_sql = "INSERT INTO charge VALUES (%s, %s);"
-    cursor.execute(insert_sql, (user_id, dept_id))
+    cursor.execute(insert_sql, (user_id, dept_name))
 
 
 '''
@@ -190,16 +186,14 @@ def insert_leader(cursor, user_id, office_date, dept_id):
 
 
 #   添加课程
-def insert_course(user_id, course_id, name, content, category, start_time, end_time):
+def insert_course(instructor_id, course_id, name, content, category, start_time, end_time):
     try:
         conn = get_db()
         cursor = conn.cursor()
         start_time = utils.string_to_date(start_time)
         end_time = utils.string_to_date(end_time)
-        insert_sql = "INSERT INTO course VALUE (%s, %s, %s, %s, %s, %s);"
-        cursor.execute(insert_sql, (course_id, name, content, category, start_time, end_time,))
-        insert_sql = "INSERT INTO teach VALUE (%s, %s);"
-        cursor.execute(insert_sql, (user_id, course_id,))
+        insert_sql = "INSERT INTO course VALUE (%s, %s, %s, %s, %s, %s, %s);"
+        cursor.execute(insert_sql, (course_id, name, content, category, start_time, end_time, instructor_id,))
         conn.commit()
     except sql.MySQLError as e:
         print(e)

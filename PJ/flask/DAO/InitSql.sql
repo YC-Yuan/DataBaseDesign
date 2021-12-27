@@ -1,12 +1,11 @@
 DROP TABLE IF EXISTS offer;
 DROP TABLE IF EXISTS participate;
 DROP TABLE IF EXISTS take;
-DROP TABLE IF EXISTS belong;
 DROP TABLE IF EXISTS log;
+DROP TABLE IF EXISTS course;
 DROP TABLE IF EXISTS staff;
 DROP TABLE IF EXISTS leader;
 DROP TABLE IF EXISTS instructor;
-DROP TABLE IF EXISTS course;
 DROP TABLE IF EXISTS employee;
 DROP TABLE IF EXISTS admin;
 DROP TABLE IF EXISTS user;
@@ -47,7 +46,7 @@ CREATE TABLE employee
     dept_name VARCHAR(20),
     PRIMARY KEY (user_id),
     FOREIGN KEY (username) REFERENCES user (username) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (dept_name) REFERENCES department (name) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (dept_name) REFERENCES department (name) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE staff
@@ -78,14 +77,14 @@ CREATE TABLE leader
 CREATE TABLE course
 (
     course_id  CHAR(5)      NOT NULL,
-    user_id    CHAR(11)     NOT NULL,
     name       VARCHAR(20)  NOT NULL,
     content    VARCHAR(255) NOT NULL,
     category   VARCHAR(20)  NOT NULL,
     start_time DATE         NOT NULL,
     end_time   DATE         NOT NULL,
+    instructor_id    CHAR(11)     NOT NULL,
     PRIMARY KEY (course_id),
-    FOREIGN KEY (user_id) REFERENCES instructor (user_id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (instructor_id) REFERENCES instructor (user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE log
