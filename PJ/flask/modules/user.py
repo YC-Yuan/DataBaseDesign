@@ -1,7 +1,7 @@
 # user 后端服务
 
 from flask import Blueprint, request
-from dao import dao
+from dao import dao_core
 from dao import dao_user
 from modules import route
 
@@ -16,7 +16,7 @@ def login():
         # 登录成功
         if dao_user.is_admin(username):
             return route.admin(username)
-        user_id = dao.get_user_id(username)
+        user_id = dao_core.get_user_id(username)
         if dao_user.is_leader(user_id):
             return route.leader(user_id)
         if dao_user.is_staff(user_id):

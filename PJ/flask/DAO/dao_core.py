@@ -1,39 +1,52 @@
 import pymysql as sql
-from dao.config import *
+from config import *
+import init_data
 
 
 def init_db():
-    sql_create_db = 'create database if not exists ' + DB_NAME
+    sql_drop_db = 'drop database if exists ' + DB_NAME
+    sql_create_db = 'CREATE DATABASE if not exists ' + DB_NAME
     db = sql.connect(host=HOST,
                      port=3306,
                      user=USER,
                      password=PWD)
     cursor = db.cursor()
+    cursor.execute(sql_drop_db)
     cursor.execute(sql_create_db)
     cursor.close()
     db.close()
 
 
-def init_tables():
+def execute_sql_file(f):
     db = get_db()
     cursor = db.cursor()
     try:
-        with open("./InitSql.sql", "r", encoding="utf8") as f:
-            sql_list = f.read().split(';')[:-1]
-            for x in sql_list:
-                if '\n' in x:
-                    # 脚本换行处替换为空格
-                    x = x.replace('\n', ' ')
-                x += ';'
-                cursor.execute(x)
+        sql_list = f.read().split(';')[:-1]
+        for x in sql_list:
+            if '\n' in x:
+                # 脚本换行处替换为空格
+                x = x.replace('\n', ' ')
+            x += ';'
+            print(x)
+            cursor.execute(x)
+        db.commit()
     except sql.MySQLError as e:
         print(e)
         db.rollback()
-        print("""建表出错,请检查init_tables函数""")
         exit(0)
     finally:
         cursor.close()
         db.close()
+
+
+def init_tables():
+    with open("sql/initSql.sql", "r", encoding="utf8") as f:
+        execute_sql_file(f)
+
+
+def init_sql():
+    with open("sql/initData.sql", 'r', encoding='utf8') as f:
+        execute_sql_file(f)
 
 
 # 获取数据库连接
@@ -86,3 +99,5 @@ def get_user_name(user_id):
 if __name__ == '__main__':
     init_db()
     init_tables()
+    init_sql()
+    init_data.init_data()

@@ -1,16 +1,3 @@
-DROP TABLE IF EXISTS offer;
-DROP TABLE IF EXISTS participate;
-DROP TABLE IF EXISTS take;
-DROP TABLE IF EXISTS log;
-DROP TABLE IF EXISTS course;
-DROP TABLE IF EXISTS staff;
-DROP TABLE IF EXISTS leader;
-DROP TABLE IF EXISTS instructor;
-DROP TABLE IF EXISTS employee;
-DROP TABLE IF EXISTS admin;
-DROP TABLE IF EXISTS user;
-DROP TABLE IF EXISTS department;
-
 CREATE TABLE department
 (
     dept_id INT         NOT NULL AUTO_INCREMENT,
@@ -68,7 +55,7 @@ CREATE TABLE leader
 (
     user_id     CHAR(11) NOT NULL,
     office_date DATE     NOT NULL,
-    dept_name VARCHAR(20) UNIQUE,
+    dept_name   VARCHAR(20) UNIQUE,
     FOREIGN KEY (user_id) REFERENCES employee (user_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (dept_name) REFERENCES department (name) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (user_id)
@@ -76,13 +63,13 @@ CREATE TABLE leader
 
 CREATE TABLE course
 (
-    course_id  CHAR(5)      NOT NULL,
-    name       VARCHAR(20)  NOT NULL,
-    content    VARCHAR(255) NOT NULL,
-    category   VARCHAR(20)  NOT NULL,
-    start_time DATE         NOT NULL,
-    end_time   DATE         NOT NULL,
-    instructor_id    CHAR(11)     NOT NULL,
+    course_id     CHAR(5)      NOT NULL,
+    name          VARCHAR(20)  NOT NULL,
+    content       VARCHAR(255) NOT NULL,
+    category      VARCHAR(20)  NOT NULL,
+    start_time    DATE         NOT NULL,
+    end_time      DATE         NOT NULL,
+    instructor_id CHAR(11)     NOT NULL,
     PRIMARY KEY (course_id),
     FOREIGN KEY (instructor_id) REFERENCES instructor (user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -90,7 +77,7 @@ CREATE TABLE course
 CREATE TABLE log
 (
     log_id    INT          NOT NULL AUTO_INCREMENT,
-    username VARCHAR(20),
+    username  VARCHAR(20),
     operation VARCHAR(255) NOT NULL,
     date      TIMESTAMP    NOT NULL,
     PRIMARY KEY (log_id),
@@ -117,12 +104,11 @@ CREATE TABLE participate
     FOREIGN KEY (user_id, course_id) REFERENCES take (user_id, course_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-
 CREATE TABLE offer
 (
     dept_id   INT         NOT NULL,
     course_id CHAR(5)     NOT NULL,
-    need   VARCHAR(10) NOT NULL CHECK (need IN ("必修", "选修")
+    need      VARCHAR(10) NOT NULL CHECK (need IN ("必修", "选修")
         ),
     PRIMARY KEY (dept_id, course_id),
     FOREIGN KEY (dept_id) REFERENCES department (dept_id) ON DELETE CASCADE ON UPDATE CASCADE,

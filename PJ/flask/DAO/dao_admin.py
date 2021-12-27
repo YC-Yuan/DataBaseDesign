@@ -1,5 +1,5 @@
 from constants.info import *
-from dao.dao import *
+from dao.dao_core import *
 import utils
 
 # 每个事务都要创建连接
