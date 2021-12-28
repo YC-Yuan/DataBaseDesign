@@ -56,6 +56,30 @@ def get_course_history_by_uid(user_id):
 
 
 '''
+    获取部门下课程
+    :param  dept_name   部门名称
+    :return courses  课程信息
+'''
+
+
+# 根据dept_name搜索课程
+def get_dept_course(dept_name):
+    conn = dao_core.get_db()
+    cursor = conn.cursor()
+    select_sql = "SELECT * FROM ((SELECT * FROM offer WHERE dept_id IN (SELECT dept_id FROM department WHERE " \
+                 "name = %s)) AS O NATURAL JOIN course)"
+    cursor.execute(select_sql, dept_name)
+    courses = utils.dict_fetch_all(cursor)
+    for course in courses:
+        course['start_time'] = utils.date_to_string(course['start_time'])
+        course['end_time'] = utils.date_to_string(course['end_time'])
+        course['instructor'] = dao_user.get_user_name(course['instructor_id'])
+    cursor.close()
+    conn.close()
+    return courses
+
+
+'''
 课程相关操作
     获取全部课程
     获取部门下课程

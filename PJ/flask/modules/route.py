@@ -41,7 +41,7 @@ def leader(user_id):
     # 查找所管理部门员工信息
     employee = dao_employee.get_employee_by_dept(dept=dept)
     # 查找所管理部门课程信息
-    courses = dao_dept.get_dept_course(dept_name=dept)
+    courses = dao_course.get_dept_course(dept_name=dept)
     return render_template('/leader.html',
                            employee=employee, courses=courses)
 
