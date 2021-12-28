@@ -4,6 +4,18 @@ from dao import dao_core, dao_dept
 import utils
 
 
+def get_dept_by_leader(user_id):
+    cmd = 'select dept_name from leader ' \
+          'where user_id= %s'
+    conn = dao_core.get_db()
+    cursor = conn.cursor()
+    cursor.execute(cmd, user_id)
+    dept = cursor.fetchone()[0]
+    cursor.close()
+    conn.close()
+    return dept
+
+
 #   按员工号给员工安排课程
 def arrange_staff_course(user_id, course_id, dept_name):
     try:
@@ -37,11 +49,9 @@ def __check_employee_in_dept(cursor, user_id, dept_name):
 #   检测课程属于部门
 def __check_course_in_dept(cursor, course_id, dept_id):
     select_sql = "SELECT need FROM offer WHERE course_id = %s AND dept_id = %s"
-    cursor.execute(select_sql, (course_id, dept_id, ))
+    cursor.execute(select_sql, (course_id, dept_id,))
     row = cursor.fetchone()
     if row is None:
         raise sql.MySQLError("没有权限")
     elif row[0] == MANDATORY:
         raise sql.MySQLError("没有必要")
-
-

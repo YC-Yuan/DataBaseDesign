@@ -91,7 +91,7 @@ def insert_employee(username, pwd, user_id, name, gender, age, hire_date, city, 
     hire_date = utils.string_to_date(hire_date)
     cmd_list.append(insert_sql)
     insert_sql = 'INSERT INTO employee VALUES("%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s");' \
-                  % (user_id, username, name, gender, age, hire_date, city, telephone, email, dept_name)
+                 % (user_id, username, name, gender, age, hire_date, city, telephone, email, dept_name)
     cmd_list.append(insert_sql)
     if role == STAFF:
         insert_sql = 'INSERT INTO staff VALUES("%s");' % user_id
@@ -111,3 +111,22 @@ def modify_info(user_id, city, telephone, email):
     cmd = 'UPDATE employee SET city= "%s",telephone= "%s",email= "%s" ' \
           'WHERE user_id= "%s"' % (city, telephone, email, user_id)
     dao_core.execute_sql(cmd)
+
+
+def get_employee_by_dept(dept):
+    cmd = 'select * from employee where dept_name= %s'
+    conn = dao_core.get_db()
+    cursor = conn.cursor()
+    cursor.execute(cmd, dept)
+    res = utils.dict_fetch_all(cursor)
+    for r in res:
+        uid = r['user_id']
+        role = STAFF
+        if dao_user.is_leader(user_id=uid):
+            role = LEADER
+        elif dao_user.is_instructor(user_id=uid):
+            role = INSTRUCTOR
+        r['role'] = role
+    cursor.close()
+    conn.close()
+    return res
