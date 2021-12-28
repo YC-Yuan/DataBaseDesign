@@ -55,12 +55,6 @@ def get_course_history_by_uid(user_id):
     return history
 
 
-# 根据部门搜索开设的课程
-def get_course_by_dept(dept):
-    conn = dao_core.get_db()
-    cursor = conn.cursor()
-
-
 '''
 课程相关操作
     获取全部课程
