@@ -33,26 +33,6 @@ def get_course_info():
         conn.close()
 
 
-#   获取部门下课程
-def get_dept_course(dept_name):
-    try:
-        conn = dao_core.get_db()
-        cursor = conn.cursor()
-        dept_id = dao_dept.get_dept_id(dept_name)
-        select_sql = "SELECT * FROM ((SELECT * FROM offer WHERE dept_id = %s) AS O NATURAL JOIN course)"
-        cursor.execute(select_sql, (dept_id,))
-        courses = utils.dict_fetch_all(cursor)
-        for course in courses:
-            course['start_time'] = utils.date_to_string(course['start_time'])
-            course['end_time'] = utils.date_to_string(course['end_time'])
-        print(courses)
-    except sql.MySQLError as e:
-        print(e)
-    finally:
-        cursor.close()
-        conn.close()
-
-
 #   获取教师教的课的信息
 def get_courses(instructor_id):
     try:

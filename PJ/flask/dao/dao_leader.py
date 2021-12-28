@@ -45,4 +45,3 @@ def __check_course_in_dept(cursor, course_id, dept_id):
         raise sql.MySQLError("没有必要")
 
 
-arrange_staff_course(19302013589, 35142, '策划部门')

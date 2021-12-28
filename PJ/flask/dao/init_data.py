@@ -1,5 +1,31 @@
 from dao.dao_employee import *
 from dao.dao_course import *
+from dao.dao_core import *
+from dao.config import *
+
+
+def init_db():
+    sql_drop_db = 'drop database if exists ' + DB_NAME
+    sql_create_db = 'CREATE DATABASE if not exists ' + DB_NAME
+    db = sql.connect(host=HOST,
+                     port=3306,
+                     user=USER,
+                     password=PWD)
+    cursor = db.cursor()
+    cursor.execute(sql_drop_db)
+    cursor.execute(sql_create_db)
+    cursor.close()
+    db.close()
+
+
+def init_tables():
+    with open("sql/initSql.sql", "r", encoding="utf8") as f:
+        execute_sql_file(f)
+
+
+def init_sql():
+    with open("sql/initData.sql", 'r', encoding='utf8') as f:
+        execute_sql_file(f)
 
 
 def init_data():
@@ -31,3 +57,10 @@ def init_data():
     set_course_require('35142', '策划部门', OPTIONAL)
     set_course_require('35155', '开发部门', OPTIONAL)
     update_courses_state()
+
+
+if __name__ == '__main__':
+    init_db()
+    init_tables()
+    init_sql()
+    init_data()

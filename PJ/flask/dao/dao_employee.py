@@ -31,25 +31,6 @@ def get_employee_info():
         conn.close()
 
 
-#   获取部门下员工
-def get_dept_user(dept_name):
-    try:
-        conn = dao_core.get_db()
-        cursor = conn.cursor()
-        select_sql = "SELECT * FROM employee WHERE dept_name = %s"
-        cursor.execute(select_sql, (dept_name,))
-        user_infos = utils.dict_fetch_all(cursor)
-        for user in user_infos:
-            user['hire_date'] = utils.date_to_string(user['hire_date'])
-        print(user_infos)
-    except sql.MySQLError as e:
-        print(e)
-        conn.rollback()
-    finally:
-        cursor.close()
-        conn.close()
-
-
 #   按姓名查询员工信息
 def search_employee_by_name(name):
     conn = dao_core.get_db()

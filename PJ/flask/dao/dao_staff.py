@@ -1,5 +1,5 @@
 from constants.info import *
-from dao import dao_user, dao_core
+from dao import dao_user, dao_core, dao_dept
 import pymysql as sql
 import utils
 
@@ -80,3 +80,21 @@ def get_course_student(course_id):
     finally:
         cursor.close()
         conn.close()
+
+
+#   转部门
+def transfer_dept(user_id, dept_name):
+    cmd_list = []
+    insert_sql = 'UPDATE employee SET dept_name = "%s" WHERE user_id = "%s"' % (dept_name, user_id)
+    cmd_list.append(insert_sql)
+    dept_id = dao_dept.get_dept_id(dept_name)
+    rows = dao_dept.get_dept_mandatory_course(dept_id)
+    for row in rows:
+        course_id = row[0]
+        insert_sql = 'INSERT INTO take (user_id, course_id) SELECT "%s", "%s" FROM dual WHERE NOT EXISTS ' \
+                     '(SELECT * FROM take WHERE user_id = "%s" AND course_id = "%s")' % (user_id, course_id, user_id, course_id)
+        cmd_list.append(insert_sql)
+    dao_core.execute_sql_list(cmd_list)
+
+
+transfer_dept(19302013589, '开发部门')
