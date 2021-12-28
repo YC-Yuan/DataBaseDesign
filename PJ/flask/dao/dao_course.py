@@ -4,7 +4,40 @@ import pymysql as sql
 import utils
 
 
-# 根据uid搜索员工在读课程
+'''
+    课程相关操作:
+    · 获取全部课程
+    · 根据员工号搜索历史课程
+    · 根据员工号搜索进行课程
+    · 获取教师教的课的信息
+    · 创建课程
+    · 修改课程部分信息（不能改结束时间）
+    · 设置课程要求
+    · 删除课程
+    · 更新课程状态
+'''
+
+
+#   获取全部课程信息
+def get_course_info():
+    conn = dao_core.get_db()
+    cursor = conn.cursor()
+    try:
+        select_sql = "SELECT * FROM course;"
+        cursor.execute(select_sql)
+        courses = utils.dict_fetch_all(cursor)
+        for course in courses:
+            course['start_time'] = utils.date_to_string(course['start_time'])
+            course['end_time'] = utils.date_to_string(course['end_time'])
+        print(courses)
+    except sql.MySQLError as e:
+        print(e)
+    finally:
+        cursor.close()
+        conn.close()
+
+
+#   根据员工号搜索进行课程
 def get_course_by_uid(user_id):
     conn = dao_core.get_db()
     cursor = conn.cursor()
@@ -56,35 +89,6 @@ def get_course_history_by_uid(user_id):
             r.pop('instructor_id')
             history.append(r)
         return history
-    except sql.MySQLError as e:
-        print(e)
-    finally:
-        cursor.close()
-        conn.close()
-
-
-'''
-课程相关操作
-    获取全部课程
-    获取部门下课程
-    课程
-    修改课程部分信息（不能改结束时间）
-    
-'''
-
-
-#   获取全部课程信息
-def get_course_info():
-    conn = dao_core.get_db()
-    cursor = conn.cursor()
-    try:
-        select_sql = "SELECT * FROM course;"
-        cursor.execute(select_sql)
-        courses = utils.dict_fetch_all(cursor)
-        for course in courses:
-            course['start_time'] = utils.date_to_string(course['start_time'])
-            course['end_time'] = utils.date_to_string(course['end_time'])
-        print(courses)
     except sql.MySQLError as e:
         print(e)
     finally:
@@ -198,4 +202,3 @@ def update_courses_state():
     dao_core.execute_sql(update_sql)
 
 
-update_courses_state()

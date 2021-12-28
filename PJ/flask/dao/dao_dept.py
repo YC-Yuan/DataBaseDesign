@@ -67,9 +67,9 @@ def get_dept_course(dept_name):
     try:
         conn = dao_core.get_db()
         cursor = conn.cursor()
-        dept_id = get_dept_id(dept_name)
-        select_sql = "SELECT * FROM ((SELECT * FROM offer WHERE dept_id = %s) AS O NATURAL JOIN course)"
-        cursor.execute(select_sql, (dept_id,))
+        select_sql = "SELECT * FROM ((SELECT * FROM offer WHERE dept_id IN (SELECT dept_id FROM department WHERE " \
+                     "name = %s)) AS O NATURAL JOIN course)"
+        cursor.execute(select_sql, (dept_name,))
         courses = utils.dict_fetch_all(cursor)
         for course in courses:
             course['start_time'] = utils.date_to_string(course['start_time'])
@@ -158,5 +158,4 @@ def get_dept_need_take_course(user_id, dept_name):
     finally:
         cursor.close()
         conn.close()
-
 
