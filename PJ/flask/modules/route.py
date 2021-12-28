@@ -28,23 +28,7 @@ def staff(user_id):
     # 查找课程与教员
     courses = dao_course.get_course_by_uid(user_id)
     # 查找历史上课信息
-    history = []
-    history.append({
-        'name': '软件实践',
-        'content': '实践软件',
-        'category': '计算机',
-        'start_time': '2018-1-12',
-        'end_time': '2019-12-21',
-        'instructor': '毅宝',
-        'evaluation': '通过',
-        'tests': [{
-            'time': '2019-12-22',
-            'score': 50
-        }, {
-            'time': '2019-12-23',
-            'score': 80
-        }, ]
-    })
+    history = dao_course.get_course_history_by_uid(user_id)
     return render_template('/staff.html',
                            info=info, courses=courses, history=history)
 
