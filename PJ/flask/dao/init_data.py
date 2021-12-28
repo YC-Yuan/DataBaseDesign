@@ -1,4 +1,5 @@
-from dao.dao_admin import *
+from dao.dao_employee import *
+from dao.dao_course import *
 
 
 def init_data():
@@ -29,4 +30,4 @@ def init_data():
     set_course_require('35142', '开发部门', MANDATORY)
     set_course_require('35142', '策划部门', OPTIONAL)
     set_course_require('35155', '开发部门', OPTIONAL)
-    update_courses()
+    update_courses_state()

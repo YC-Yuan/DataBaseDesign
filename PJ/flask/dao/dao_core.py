@@ -1,4 +1,6 @@
 import pymysql as sql
+
+from dao import init_data
 from dao.config import *
 import dao.init_data
 

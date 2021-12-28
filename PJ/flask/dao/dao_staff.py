@@ -62,3 +62,21 @@ def get_take_courses(user_id):
     finally:
         cursor.close()
         conn.close()
+
+
+#   获取某一门课的学生的信息
+def get_course_student(course_id):
+    try:
+        conn = dao_core.get_db()
+        cursor = conn.cursor()
+        select_sql = "SELECT * FROM employee AS e WHERE e.user_id IN (SELECT user_id FROM take WHERE course_id = %s)"
+        cursor.execute(select_sql, (course_id,))
+        students = utils.dict_fetch_all(cursor)
+        for student in students:
+            student['hire_date'] = utils.date_to_string(student['hire_date'])
+        print(students)
+    except sql.MySQLError as e:
+        print(e)
+    finally:
+        cursor.close()
+        conn.close()
