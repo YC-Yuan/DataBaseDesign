@@ -7,6 +7,58 @@
 
 </head>
 <body>
+<div class="container">
+    <div class="jumbotron mt-2">
+        <h1 class="display-4">主管</h1>
+        <hr class="my-4">
+        <div class="row">
+            <div class="col-3">
+                <div class="list-group" id="list-tab" role="tablist">staff
+                    <a class="list-group-item list-group-item-action active"
+                       id="list-home-list" data-toggle="list"
+                       href="#list-employee" role="tab">部门成员</a>
+                    <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list"
+                       href="#list-course" role="tab">部门课程</a>
+                </div>
+            </div>
+            <div class="col-9">
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="list-employee" role="tabpanel"
+                         aria-labelledby="list-home-list">
+                        {# 部门员工信息 #}
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th scope="col">员工号</th>
+                                <th scope="col">姓名</th>
+                                <th scope="col">入职时间</th>
+                                <th scope="col">级别</th>
+                                <th scope="col">城市</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for e in employee %}
+                                <tr>
+                                    <th scope="row">{{ e.user_id }}</th>
+                                    <td>{{ e.name }}</td>
+                                    <td>{{ e.hire_date }}</td>
+                                    <td>{{ e.role }}</td>
+                                    <td>{{ e.city }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        {{ employee }}
+                    </div>
+                    <div class="tab-pane fade" id="list-course" role="tabpanel" aria-labelledby="list-profile-list">
+                        {# 部门所开课程 #}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
 <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>

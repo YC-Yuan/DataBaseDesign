@@ -8,59 +8,57 @@ import utils
 def get_course_by_uid(user_id):
     conn = dao_core.get_db()
     cursor = conn.cursor()
-    try:
-        cmd = 'select course_id,name,content,category,start_time,end_time,instructor_id ' \
-              'from course natural join (' \
-              'select * from take ' \
-              'where take.user_id = %s) as t ' \
-              'where evaluation != %s'
-        cursor.execute(cmd, (user_id, PASSED,))
-        res = utils.dict_fetch_all(cursor)
-        courses = []
-        for r in res:
-            r['cid'] = r['course_id']
-            r['tests'] = dao_participate.get_tests_by_uc(user_id=user_id, course_id=r['course_id'])
-            r['start_time'] = utils.date_to_string(r['start_time'])
-            r['end_time'] = utils.date_to_string(r['end_time'])
-            r['instructor'] = dao_user.get_user_name(r['instructor_id'])
-            r.pop('course_id')
-            r.pop('instructor_id')
-            courses.append(r)
-        return courses
-    except sql.MySQLError as e:
-        print(e)
-    finally:
-        cursor.close()
-        conn.close()
+    cmd = 'select course_id,name,content,category,start_time,end_time,instructor_id ' \
+          'from course natural join (' \
+          'select * from take ' \
+          'where take.user_id = %s) as t ' \
+          'where evaluation != %s'
+    cursor.execute(cmd, (user_id, PASSED,))
+    res = utils.dict_fetch_all(cursor)
+    courses = []
+    for r in res:
+        r['cid'] = r['course_id']
+        r['tests'] = dao_participate.get_tests_by_uc(user_id=user_id, course_id=r['course_id'])
+        r['start_time'] = utils.date_to_string(r['start_time'])
+        r['end_time'] = utils.date_to_string(r['end_time'])
+        r['instructor'] = dao_user.get_user_name(r['instructor_id'])
+        r.pop('course_id')
+        r.pop('instructor_id')
+        courses.append(r)
+    cursor.close()
+    conn.close()
+    return courses
 
 
 # 根据uid搜索员工历史课程
 def get_course_history_by_uid(user_id):
     conn = dao_core.get_db()
     cursor = conn.cursor()
-    try:
-        cmd = 'select course_id,name,content,category,start_time,end_time,instructor_id ' \
-              'from course natural join (' \
-              'select * from take ' \
-              'where take.user_id = %s) as t ' \
-              'where evaluation = %s'
-        cursor.execute(cmd, (user_id, PASSED,))
-        res = cursor.fetchall()
-        history = []
-        for r in res:
-            r['cid'] = r['course_id']
-            r['start_time'] = utils.date_to_string(r['start_time'])
-            r['end_time'] = utils.date_to_string(r['end_time'])
-            r['instructor'] = dao_user.get_user_name(r['instructor_id'])
-            r.pop('course_id')
-            r.pop('instructor_id')
-            history.append(r)
-        return history
-    except sql.MySQLError as e:
-        print(e)
-    finally:
-        cursor.close()
-        conn.close()
+    cmd = 'select course_id,name,content,category,start_time,end_time,instructor_id ' \
+          'from course natural join (' \
+          'select * from take ' \
+          'where take.user_id = %s) as t ' \
+          'where evaluation = %s'
+    cursor.execute(cmd, (user_id, PASSED,))
+    res = cursor.fetchall()
+    history = []
+    for r in res:
+        r['cid'] = r['course_id']
+        r['start_time'] = utils.date_to_string(r['start_time'])
+        r['end_time'] = utils.date_to_string(r['end_time'])
+        r['instructor'] = dao_user.get_user_name(r['instructor_id'])
+        r.pop('course_id')
+        r.pop('instructor_id')
+        history.append(r)
+    cursor.close()
+    conn.close()
+    return history
+
+
+# 根据部门搜索开设的课程
+def get_course_by_dept(dept):
+    conn = dao_core.get_db()
+    cursor = conn.cursor()
 
 
 '''
