@@ -86,12 +86,11 @@
                                 <tr>
                                     <th scope="row">{{ course.name }}</th>
                                     <td>{{ course.instructor }}</td>
-                                    <td>{{ course.start_time }}-{{ course.end_time }}</td>
+                                    <td>{{ course.start_time }} 至 {{ course.end_time }}</td>
                                 </tr>
                             {% endfor %}
                             </tbody>
                         </table>
-                        {{ courses }}
                     </div>
                     <div class="tab-pane fade" id="list-history" role="tabpanel" aria-labelledby="list-messages-list">
                         {{ history }}
