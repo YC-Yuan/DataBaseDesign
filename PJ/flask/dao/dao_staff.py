@@ -96,5 +96,3 @@ def transfer_dept(user_id, dept_name):
         cmd_list.append(insert_sql)
     dao_core.execute_sql_list(cmd_list)
 
-
-transfer_dept(19302013589, '开发部门')

@@ -43,12 +43,13 @@ def insert_log(username, operation, date):
 
 
 #   修改日志
-def modify_log(log_id, operation):
+def modify_log(log_id, username, operation, date):
     conn = dao_core.get_db()
     cursor = conn.cursor()
     try:
-        update_sql = "UPDATE log SET operation = %s WHERE log_id = %s"
-        cursor.execute(update_sql, (operation, log_id,))
+        date = utils.string_to_date(date)
+        update_sql = "UPDATE log SET username = %s, operation = %s, date = %s WHERE log_id = %s"
+        cursor.execute(update_sql, (username, operation, date, log_id,))
         conn.commit()
     except sql.MySQLError as e:
         print(e)
@@ -60,7 +61,7 @@ def modify_log(log_id, operation):
 
 #   删除日志
 def delete_log(log_id):
-    conn = get_db()
+    conn = dao_core.get_db()
     cursor = conn.cursor()
     try:
         delete_sql = "DELETE FROM log WHERE log_id = %s"

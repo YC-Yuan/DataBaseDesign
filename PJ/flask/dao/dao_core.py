@@ -1,6 +1,7 @@
 import pymysql as sql
 from dao.config import *
 
+
 # 执行无返回的sql语句
 def execute_sql(cmd):
     conn = get_db()

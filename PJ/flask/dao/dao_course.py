@@ -13,23 +13,19 @@ def get_course_by_uid(user_id):
               'from course natural join (' \
               'select * from take ' \
               'where take.user_id = %s) as t ' \
-              'where evaluation = "未通过"'
-        cursor.execute(cmd, user_id)
-        res = cursor.fetchall()
+              'where evaluation != "%s"'
+        cursor.execute(cmd, (user_id, PASSED,))
+        res = utils.dict_fetch_all(cursor)
         courses = []
         for r in res:
-            ins_id = r[6]
-            ins_name = dao_user.get_user_name(ins_id)
-            courses.append({
-                'cid': r[0],
-                'name': r[1],
-                'content': r[2],
-                'category': r[3],
-                'start_time': r[4],
-                'end_time': r[5],
-                'instructor': ins_name,
-                'tests': dao_participate.get_tests_by_uc(user_id=user_id, course_id=r[0])
-            })
+            r['cid'] = r['course_id']
+            r['tests'] = dao_participate.get_tests_by_uc(user_id=user_id, course_id=r['course_id'])
+            r['start_time'] = utils.date_to_string(r['start_time'])
+            r['end_time'] = utils.date_to_string(r['end_time'])
+            r['instructor'] = dao_user.get_user_name(r['instructor_id'])
+            r.pop('course_id')
+            r.pop('instructor_id')
+            courses.append(r)
         return courses
     except sql.MySQLError as e:
         print(e)
@@ -47,22 +43,18 @@ def get_course_history_by_uid(user_id):
               'from course natural join (' \
               'select * from take ' \
               'where take.user_id = %s) as t ' \
-              'where evaluation != "未通过"'
-        cursor.execute(cmd, user_id)
+              'where evaluation = "%s"'
+        cursor.execute(cmd, (user_id, PASSED,))
         res = cursor.fetchall()
         history = []
         for r in res:
-            ins_id = r[6]
-            ins_name = dao_user.get_user_name(ins_id)
-            history.append({
-                'cid': r[0],
-                'name': r[1],
-                'content': r[2],
-                'category': r[3],
-                'start_time': r[4],
-                'end_time': r[5],
-                'instructor': ins_name,
-            })
+            r['cid'] = r['course_id']
+            r['start_time'] = utils.date_to_string(r['start_time'])
+            r['end_time'] = utils.date_to_string(r['end_time'])
+            r['instructor'] = dao_user.get_user_name(r['instructor_id'])
+            r.pop('course_id')
+            r.pop('instructor_id')
+            history.append(r)
         return history
     except sql.MySQLError as e:
         print(e)
