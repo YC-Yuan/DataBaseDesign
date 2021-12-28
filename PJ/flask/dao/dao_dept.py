@@ -64,22 +64,18 @@ def get_dept_user(dept_name):
 
 
 def get_dept_course(dept_name):
-    try:
-        conn = dao_core.get_db()
-        cursor = conn.cursor()
-        select_sql = "SELECT * FROM ((SELECT * FROM offer WHERE dept_id IN (SELECT dept_id FROM department WHERE " \
-                     "name = %s)) AS O NATURAL JOIN course)"
-        cursor.execute(select_sql, (dept_name,))
-        courses = utils.dict_fetch_all(cursor)
-        for course in courses:
-            course['start_time'] = utils.date_to_string(course['start_time'])
-            course['end_time'] = utils.date_to_string(course['end_time'])
-        print(courses)
-    except sql.MySQLError as e:
-        print(e)
-    finally:
-        cursor.close()
-        conn.close()
+    conn = dao_core.get_db()
+    cursor = conn.cursor()
+    select_sql = "SELECT * FROM ((SELECT * FROM offer WHERE dept_id IN (SELECT dept_id FROM department WHERE " \
+                 "name = %s)) AS O NATURAL JOIN course)"
+    cursor.execute(select_sql, (dept_name,))
+    courses = utils.dict_fetch_all(cursor)
+    for course in courses:
+        course['start_time'] = utils.date_to_string(course['start_time'])
+        course['end_time'] = utils.date_to_string(course['end_time'])
+    print(courses)
+    cursor.close()
+    conn.close()
 
 
 '''
@@ -158,4 +154,5 @@ def get_dept_need_take_course(user_id, dept_name):
     finally:
         cursor.close()
         conn.close()
+
 

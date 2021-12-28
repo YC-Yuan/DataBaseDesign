@@ -96,6 +96,35 @@ def get_course_history_by_uid(user_id):
         conn.close()
 
 
+'''
+课程相关操作
+    获取全部课程
+    获取部门下课程
+    课程
+    修改课程部分信息（不能改结束时间）
+    
+'''
+
+
+#   获取全部课程信息
+def get_course_info():
+    conn = dao_core.get_db()
+    cursor = conn.cursor()
+    try:
+        select_sql = "SELECT * FROM course;"
+        cursor.execute(select_sql)
+        courses = utils.dict_fetch_all(cursor)
+        for course in courses:
+            course['start_time'] = utils.date_to_string(course['start_time'])
+            course['end_time'] = utils.date_to_string(course['end_time'])
+        print(courses)
+    except sql.MySQLError as e:
+        print(e)
+    finally:
+        cursor.close()
+        conn.close()
+
+
 #   获取教师教的课的信息
 def get_courses(instructor_id):
     try:
@@ -197,8 +226,9 @@ def delete_course(course_id):
 
 #   更新课程状态（指结课）
 def update_courses_state():
-    update_sql = 'UPDATE take SET evaluation = "%s" WHERE evaluation IS NULL AND course_id IN ' \
-                 '(SELECT course_id FROM course WHERE end_time <= "%s")' % (FAILED, utils.get_current_date())
+    update_sql = "UPDATE take SET evaluation = '%s' WHERE evaluation IS NULL AND course_id IN " \
+                 "(SELECT course_id FROM course WHERE end_time <= now())" % FAILED
     dao_core.execute_sql(update_sql)
 
 
+update_courses_state()
