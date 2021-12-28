@@ -193,6 +193,6 @@ def delete_course(course_id):
 
 #   更新课程状态（指结课）
 def update_courses_state():
-    update_sql = "UPDATE take SET evaluation = %s WHERE evaluation IS NULL AND course_id IN " \
-                 "(SELECT course_id FROM course WHERE end_time <= %s)" % (FAILED, utils.get_current_date())
+    update_sql = "UPDATE take SET evaluation = '%s' WHERE evaluation IS NULL AND course_id IN " \
+                 "(SELECT course_id FROM course WHERE end_time <= now())" % FAILED
     dao_core.execute_sql(update_sql)
