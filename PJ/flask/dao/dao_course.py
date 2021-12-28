@@ -13,7 +13,7 @@ def get_course_by_uid(user_id):
               'from course natural join (' \
               'select * from take ' \
               'where take.user_id = %s) as t ' \
-              'where evaluation != "%s"'
+              'where evaluation != %s'
         cursor.execute(cmd, (user_id, PASSED,))
         res = utils.dict_fetch_all(cursor)
         courses = []
@@ -43,7 +43,7 @@ def get_course_history_by_uid(user_id):
               'from course natural join (' \
               'select * from take ' \
               'where take.user_id = %s) as t ' \
-              'where evaluation = "%s"'
+              'where evaluation = %s'
         cursor.execute(cmd, (user_id, PASSED,))
         res = cursor.fetchall()
         history = []
