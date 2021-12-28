@@ -1,13 +1,12 @@
 from constants.info import *
-<<<<<<< HEAD
-from dao.dao_core import *
-from dao import dao_user
+from dao import dao_user, dao_core, dao_dept
+import pymysql as sql
 import utils
 
 
 # 根据uid搜索员工所选课程
 def get_course_by_uid(user_id):
-    conn = get_db()
+    conn = dao_core.get_db()
     cursor = conn.cursor()
     try:
         cmd = 'select course_id,name,content,category,start_time,end_time,instructor_id ' \
@@ -35,10 +34,6 @@ def get_course_by_uid(user_id):
     finally:
         cursor.close()
         conn.close()
-=======
-from dao import dao_core, dao_dept
-import pymysql as sql
-import utils
 
 
 '''
@@ -194,4 +189,3 @@ def update_courses_state():
     update_sql = "UPDATE take SET evaluation = %s WHERE evaluation IS NULL AND course_id IN " \
                  "(SELECT course_id FROM course WHERE end_time <= %s)" % (FAILED, utils.get_current_date())
     dao_core.execute_sql(update_sql)
->>>>>>> origin/main
