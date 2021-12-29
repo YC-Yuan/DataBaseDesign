@@ -8,7 +8,7 @@ bp_route = Blueprint('route', __name__, url_prefix="")
 
 @bp_route.route('/', methods=['GET'])
 def home():
-    return render_template('/login.html')
+    return render_template('login.html')
 
 
 @bp_route.route('/login', methods=['GET'])
@@ -17,7 +17,7 @@ def login():
 
 
 def login_failed(msg):
-    return render_template('/login.html', msg=msg)
+    return render_template('login.html', msg=msg)
 
 
 # 获取员工信息传给前端
@@ -28,12 +28,12 @@ def staff(user_id):
     courses = dao_course.get_course_by_uid(user_id)
     # 查找历史上课信息
     history = dao_course.get_course_history_by_uid(user_id)
-    return render_template('/staff.html',
+    return render_template('staff.html',
                            info=info, courses=courses, history=history)
 
 
 def instructor(user_id):
-    return render_template('/instructor')
+    return render_template('instructor.html')
 
 
 def leader(user_id):
@@ -42,9 +42,9 @@ def leader(user_id):
     employee = dao_employee.get_employee_by_dept(dept=dept)
     # 查找所管理部门课程信息
     courses = dao_course.get_dept_course(dept_name=dept)
-    return render_template('/leader.html',
-                           employee=employee, courses=courses)
+    return render_template('leader/leader.html',
+                           dept_name=dept, employee=employee, courses=courses)
 
 
 def admin(username):
-    return render_template('/admin.html')
+    return render_template('admin/admin.html')

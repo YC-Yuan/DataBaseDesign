@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Leader</title>
+    <title>主管</title>
     <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
 
 </head>
 <body>
 <div class="container">
     <div class="jumbotron mt-2">
-        <h1 class="display-4">主管</h1>
+        <h1 class="display-4">主管:{{ dept_name }}</h1>
         <hr class="my-4">
         <div class="row">
             <div class="col-3">
@@ -39,7 +39,9 @@
                             <tbody>
                             {% for e in employee %}
                                 <tr>
-                                    <th scope="row">{{ e.user_id }}</th>
+                                    <th scope="row"><a
+                                            href="{{ url_for('leader.score') }}?uid={{ e.user_id }}">{{ e.user_id }}</a>
+                                    </th>
                                     <td>{{ e.name }}</td>
                                     <td>{{ e.hire_date }}</td>
                                     <td>{{ e.role }}</td>
