@@ -1,7 +1,6 @@
 from constants.info import *
 from dao import dao_user, dao_core, dao_dept
 import pymysql as sql
-import utils
 
 
 def get_tests_by_uc(user_id, course_id):

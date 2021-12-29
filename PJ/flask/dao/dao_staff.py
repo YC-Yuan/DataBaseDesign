@@ -21,65 +21,18 @@ def get_user_info(user_id):
         conn.close()
 
 
-#   获取用户课程信息
-def get_take_courses(user_id):
+#   获取某一门课的学生的信息
+def get_staff_by_course_id(course_id):
     conn = dao_core.get_db()
     cursor = conn.cursor()
-    try:
-        #   未完成
-        courses = []
-        #   已完成
-        history = []
-        select_sql = "SELECT * FROM take WHERE user_id = %s"
-        cursor.execute(select_sql, (user_id,))
-        #   获取所有的课程id
-        rows = cursor.fetchall()
-        for row in rows:
-            select_sql = "SELECT * FROM course WHERE course_id = %s"
-            cursor.execute(select_sql, (row[1],))
-            course = utils.dict_fetch_one(cursor)
-            course['start_time'] = utils.date_to_string(course['start_time'])
-            course['end_time'] = utils.date_to_string(course['end_time'])
-            course['instructor'] = dao_user.get_user_name(course['user_id'])
-            course.pop('user_id')
-            #   已通过的课程
-            if row[2] is not None and row[2] == PASSED:
-                course['evaluation'] = PASSED
-                select_sql = "SELECT * FROM participate WHERE user_id = %s AND course_id = %s"
-                cursor.execute(select_sql, (user_id, row[1],))
-                tests = utils.dict_fetch_all(cursor)
-                for test in tests:
-                    test.pop('user_id')
-                    test.pop('course_id')
-                course['tests'] = tests
-                history.append(course)
-            #   未完成的课程
-            else:
-                courses.append(course)
-        return courses, history
-    except sql.MySQLError as e:
-        print(e)
-    finally:
-        cursor.close()
-        conn.close()
-
-
-#   获取某一门课的学生的信息
-def get_course_student(course_id):
-    try:
-        conn = dao_core.get_db()
-        cursor = conn.cursor()
-        select_sql = "SELECT * FROM employee AS e WHERE e.user_id IN (SELECT user_id FROM take WHERE course_id = %s)"
-        cursor.execute(select_sql, (course_id,))
-        students = utils.dict_fetch_all(cursor)
-        for student in students:
-            student['hire_date'] = utils.date_to_string(student['hire_date'])
-        print(students)
-    except sql.MySQLError as e:
-        print(e)
-    finally:
-        cursor.close()
-        conn.close()
+    select_sql = "SELECT * FROM employee AS e WHERE e.user_id IN (SELECT user_id FROM take WHERE course_id = %s)"
+    cursor.execute(select_sql, (course_id,))
+    students = utils.dict_fetch_all(cursor)
+    for student in students:
+        student['hire_date'] = utils.date_to_string(student['hire_date'])
+    cursor.close()
+    conn.close()
+    return students
 
 
 #   转部门
@@ -92,10 +45,10 @@ def transfer_dept(username, user_id, dept_name):
     for row in rows:
         course_id = row[0]
         insert_sql = 'INSERT INTO take (user_id, course_id) SELECT "%s", "%s" FROM dual WHERE NOT EXISTS ' \
-                     '(SELECT * FROM take WHERE user_id = "%s" AND course_id = "%s")' % (user_id, course_id, user_id, course_id)
+                     '(SELECT * FROM take WHERE user_id = "%s" AND course_id = "%s")' % (
+                         user_id, course_id, user_id, course_id)
         cmd_list.append(insert_sql)
     operation = 'transfer %s to %s' % (user_id, dept_name)
     log_sql = dao_log.insert_log(username, operation)
     cmd_list.append(log_sql)
     dao_core.execute_sql_list(cmd_list)
-

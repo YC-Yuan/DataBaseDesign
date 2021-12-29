@@ -9,9 +9,9 @@ import utils
 
 #   录入成绩
 def score_input(instructor_id, user_id, course_id, score):
+    conn = get_db()
+    cursor = conn.cursor()
     try:
-        conn = get_db()
-        cursor = conn.cursor()
         __check_course(cursor, instructor_id, course_id)
         select_sql = "SELECT end_time FROM course WHERE course_id = %s"
         cursor.execute(select_sql, (course_id,))
