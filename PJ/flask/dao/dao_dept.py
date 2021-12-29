@@ -38,9 +38,9 @@ def get_dept_id(dept_name):
 
 
 def get_dept_mandatory_course(dept_id):
+    conn = dao_core.get_db()
+    cursor = conn.cursor()
     try:
-        conn = dao_core.get_db()
-        cursor = conn.cursor()
         select_sql = "SELECT course_id FROM offer WHERE dept_id = %s AND need = %s"
         cursor.execute(select_sql, (dept_id, MANDATORY,))
         rows = cursor.fetchall()
@@ -85,9 +85,9 @@ def get_qualified_staff(dept_name):
 
 
 def get_dept_need_take_course(user_id, dept_name):
+    conn = dao_core.get_db()
+    cursor = conn.cursor()
     try:
-        conn = dao_core.get_db()
-        cursor = conn.cursor()
         dept_id = get_dept_id(dept_name)
         select_sql = "SELECT * FROM course WHERE course_id IN " \
                      "(SELECT course_id FROM offer WHERE dept_id = %s AND need = %s AND course_id NOT IN" \
