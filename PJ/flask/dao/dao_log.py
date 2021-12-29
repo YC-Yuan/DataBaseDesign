@@ -27,26 +27,17 @@ def get_log_info():
 
 
 #   添加日志
-def insert_log(username, operation, date):
-    conn = dao_core.get_db()
-    cursor = conn.cursor()
-    try:
-        update_sql = "INSERT INTO log (username operation, date) VALUES (%s, %s)"
-        cursor.execute(update_sql, (username, operation, utils.string_to_timestamp(date),))
-        conn.commit()
-    except sql.MySQLError as e:
-        print(e)
-        conn.rollback()
-    finally:
-        cursor.close()
-        conn.close()
+def insert_log(username, operation):
+    update_sql = 'INSERT INTO log (username, operation, date) VALUES ("%s", "%s", "%s")' \
+                 % (username, operation, utils.get_current_date())
+    return update_sql
 
 
 #   修改日志
 def modify_log(log_id, username, operation, date):
-    conn = dao_core.get_db()
-    cursor = conn.cursor()
     try:
+        conn = dao_core.get_db()
+        cursor = conn.cursor()
         date = utils.string_to_date(date)
         update_sql = "UPDATE log SET username = %s, operation = %s, date = %s WHERE log_id = %s"
         cursor.execute(update_sql, (username, operation, date, log_id,))

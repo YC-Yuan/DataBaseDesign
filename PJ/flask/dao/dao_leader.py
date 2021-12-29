@@ -1,6 +1,6 @@
 from constants.info import *
 import pymysql as sql
-from dao import dao_core, dao_dept
+from dao import dao_core, dao_dept, dao_log
 import utils
 
 
@@ -17,24 +17,15 @@ def get_dept_by_leader(user_id):
 
 
 #   按员工号给员工安排课程
-def arrange_staff_course(user_id, course_id, dept_name):
-    try:
-        conn = dao_core.get_db()
-        cursor = conn.cursor()
-        __check_employee_in_dept(cursor, user_id, dept_name)
-        dept_id = dao_dept.get_dept_id(dept_name)
-        __check_course_in_dept(cursor, course_id, dept_id)
-        insert_sql = "INSERT INTO take (user_id, course_id) SELECT %s, %s FROM dual WHERE NOT EXISTS " \
-                     "(SELECT * FROM take WHERE user_id = %s AND course_id = %s)"
-        cursor.execute(insert_sql, (user_id, course_id, user_id, course_id,))
-        conn.commit()
-        print("arrange_staff_course")
-    except sql.MySQLError as e:
-        print(e)
-        conn.rollback()
-    finally:
-        cursor.close()
-        conn.close()
+def arrange_staff_course(username, user_id, course_id, dept_name):
+    cmd_list = []
+    insert_sql = 'INSERT INTO take (user_id, course_id) SELECT "%s", "%s" FROM dual WHERE NOT EXISTS' \
+                 '(SELECT * FROM take WHERE user_id = "%s" AND course_id = "%s")' % (user_id, course_id, user_id, course_id)
+    operation = 'arrange course %s for %s' % (course_id, user_id)
+    log_sql = dao_log.insert_log(username, operation)
+    cmd_list.append(insert_sql)
+    cmd_list.append(log_sql)
+    dao_core.execute_sql_list(cmd_list)
 
 
 #   检测员工属于部门且为普通员工

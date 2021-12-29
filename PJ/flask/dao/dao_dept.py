@@ -31,6 +31,28 @@ def get_dept_id(dept_name):
 
 
 '''
+    获取部门下课程
+    :param  dept_name   部门名称
+    :return courses_infos  课程信息
+'''
+
+
+def get_dept_course(dept_name):
+    conn = dao_core.get_db()
+    cursor = conn.cursor()
+    dept_id = get_dept_id(dept_name)
+    select_sql = "SELECT * FROM ((SELECT * FROM offer WHERE dept_id = %s) AS O NATURAL JOIN course)"
+    cursor.execute(select_sql, (dept_id,))
+    courses = utils.dict_fetch_all(cursor)
+    for course in courses:
+        course['start_time'] = utils.date_to_string(course['start_time'])
+        course['end_time'] = utils.date_to_string(course['end_time'])
+    print(courses)
+    cursor.close()
+    conn.close()
+
+
+'''
     获取部门下必修课ID
     :param  dept_name   部门名称
     :return courses_ids 课程编号
@@ -38,9 +60,9 @@ def get_dept_id(dept_name):
 
 
 def get_dept_mandatory_course(dept_id):
-    conn = dao_core.get_db()
-    cursor = conn.cursor()
     try:
+        conn = dao_core.get_db()
+        cursor = conn.cursor()
         select_sql = "SELECT course_id FROM offer WHERE dept_id = %s AND need = %s"
         cursor.execute(select_sql, (dept_id, MANDATORY,))
         rows = cursor.fetchall()
