@@ -50,6 +50,10 @@
                                 <th>入职日期</th>
                                 <td>{{ info.hire_date }}</td>
                             </tr>
+                            <tr>
+                                <th>所属部门</th>
+                                <td>{{ info.dept_name }}</td>
+                            </tr>
                             </tbody>
                         </table>
                         <form action="{{ url_for('user.info_modify') }}" method="post">

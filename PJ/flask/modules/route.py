@@ -42,9 +42,11 @@ def leader(user_id):
     employee = dao_employee.get_employee_by_dept(dept=dept)
     # 查找所管理部门课程信息
     courses = dao_course.get_dept_course(dept_name=dept)
-    return render_template('leader/leader.html',
-                           dept_name=dept, employee=employee, courses=courses)
+    # 查找符合转部门情况的员工信息
+    qualified_employee = dao_dept.get_qualified_staff(dept_name=dept)
+    return render_template('leader/leader.html', uid=user_id,
+                           dept_name=dept, employee=employee, courses=courses,
+                           qualified_employee=qualified_employee)
 
-
-def admin(username):
-    return render_template('admin/admin.html')
+    def admin(username):
+        return render_template('admin/admin.html')

@@ -82,23 +82,20 @@ def get_dept_mandatory_course(dept_id):
 
 
 def get_qualified_staff(dept_name):
-    try:
-        conn = dao_core.get_db()
-        cursor = conn.cursor()
-        select_sql = "SELECT * FROM " \
-                     "(SELECT * FROM employee NATURAL JOIN staff WHERE dept_name = %s) AS e " \
-                     "WHERE NOT EXISTS " \
-                     "(SELECT * FROM take WHERE take.user_id = e.user_id AND evaluation != %s)"
-        cursor.execute(select_sql, (dept_name, PASSED,))
-        user_infos = utils.dict_fetch_all(cursor)
-        for user in user_infos:
-            user['hire_date'] = utils.date_to_string(user['hire_date'])
-        print(user_infos)
-    except sql.MySQLError as e:
-        print(e)
-    finally:
-        cursor.close()
-        conn.close()
+    conn = dao_core.get_db()
+    cursor = conn.cursor()
+    select_sql = "SELECT * FROM " \
+                 "(SELECT * FROM employee NATURAL JOIN staff WHERE dept_name = %s) AS e " \
+                 "WHERE NOT EXISTS " \
+                 "(SELECT * FROM take WHERE take.user_id = e.user_id AND evaluation != %s)"
+    cursor.execute(select_sql, (dept_name, PASSED,))
+    user_infos = utils.dict_fetch_all(cursor)
+    for user in user_infos:
+        user['hire_date'] = utils.date_to_string(user['hire_date'])
+    print(user_infos)
+    cursor.close()
+    conn.close()
+    return user_infos
 
 
 '''

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>主管</title>
     <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
-
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 </head>
 <body>
 <div class="container">
@@ -15,16 +15,20 @@
             <div class="col-3">
                 <div class="list-group" id="list-tab" role="tablist">
                     <a class="list-group-item list-group-item-action active"
-                       id="list-home-list" data-toggle="list"
+                       id="index-employee" data-toggle="list"
                        href="#list-employee" role="tab">部门成员</a>
-                    <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list"
+                    <a class="list-group-item list-group-item-action"
+                       id="index-course" data-toggle="list"
                        href="#list-course" role="tab">部门课程</a>
+                    <a class="list-group-item list-group-item-action"
+                       id="index-change-dept" data-toggle="list"
+                       href="#list-change-dept" role="tab">成员转部</a>
                 </div>
             </div>
             <div class="col-9">
                 <div class="tab-content" id="nav-tabContent">
                     <div class="tab-pane fade show active" id="list-employee" role="tabpanel"
-                         aria-labelledby="list-home-list">
+                         aria-labelledby="index-employee">
                         {# 部门员工信息 #}
                         <table class="table table-bordered">
                             <thead>
@@ -52,7 +56,7 @@
                         </table>
                         {{ employee }}
                     </div>
-                    <div class="tab-pane fade" id="list-course" role="tabpanel" aria-labelledby="list-profile-list">
+                    <div class="tab-pane fade" id="list-course" role="tabpanel" aria-labelledby="index-course">
                         {# 部门所开课程 #}
                         <table class="table table-bordered">
                             <thead>
@@ -79,6 +83,66 @@
                             </tbody>
                         </table>
                         {{ courses }}
+                    </div>
+                    <div class="tab-pane fade" id="list-change-dept" role="tabpanel"
+                         aria-labelledby="index-change-dept"
+                    >
+                        <form action="{{ url_for('leader.change_dept') }}" method="post">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="uid">转出员工号</label>
+                                </div>
+                                <select class="custom-select" id="uid" name="uid">
+                                    <option value="" selected>选择要转出的员工</option>
+                                    {% for q in qualified_employee %}
+                                        <option value="{{ q.user_id }}">{{ q.user_id }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="dept">转出部门</label>
+                                </div>
+                                <select class="custom-select" id="dept" name="dept">
+                                    <option value="" selected>选择要转到的部门</option>
+                                    <option value="人事管理部门">人事管理部门</option>
+                                    <option value="开发部门">开发部门</option>
+                                    <option value="测试部门">测试部门</option>
+                                    <option value="策划部门">策划部门</option>
+                                    <option value="营销部门">营销部门</option>
+                                </select>
+                            </div>
+                            <button type="button" id="change-dept-button" class="btn btn-primary">确定转出</button>
+                        </form>
+                        <script>
+                            let uid_select = $("#uid")
+                            let dept_select = $("#dept")
+                            $("#change-dept-button").click(function () {
+                                console.log(uid_select.val())
+                                console.log(dept_select.val())
+                                if (uid_select.val() === "") {
+                                    alert("请选择要转出的员工")
+                                } else if (dept_select.val() === "") {
+                                    alert("请选择要转到的部门")
+                                } else {
+                                    // 发送请求!
+                                    let form = new FormData();
+                                    form.append('uid', uid_select.val())
+                                    form.append('dept', dept_select.val())
+                                    form.append('leader_id', {{ uid }})
+                                    $.ajax({
+                                        url: "{{ url_for('leader.change_dept') }}",
+                                        type: "post",
+                                        data: form,
+                                        dataType: 'json',
+                                        success: function (data) {
+                                            alert(data)
+                                        },
+                                    })
+                                }
+                            })
+                        </script>
+                        {{ qualified_employee }}
                     </div>
                 </div>
             </div>
