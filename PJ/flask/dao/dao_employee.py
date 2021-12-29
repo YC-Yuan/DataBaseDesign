@@ -1,5 +1,5 @@
 from constants.info import *
-from dao import dao_user, dao_core
+from dao import dao_user, dao_core, dao_log
 import pymysql as sql
 import utils
 
@@ -102,16 +102,24 @@ def insert_employee(username, pwd, user_id, name, gender, age, hire_date, city, 
         insert_sql = 'INSERT INTO leader VALUES ("%s", "%s", "%s");' % (user_id, office_date, dept_name)
     else:
         return False
+    operation = 'create %s %s' % (role, user_id)
     cmd_list.append(insert_sql)
+    log_sql = dao_log.insert_log(ADMIN_USERNAME, operation)
+    cmd_list.append(log_sql)
     dao_core.execute_sql_list(cmd_list)
     return True
 
 
 # 用户修改信息
 def modify_info(user_id, city, telephone, email):
+    cmd_list = []
     cmd = 'UPDATE employee SET city= "%s",telephone= "%s",email= "%s" ' \
           'WHERE user_id= "%s"' % (city, telephone, email, user_id)
-    dao_core.execute_sql(cmd)
+    username = dao_user.get_user_name(user_id)
+    log_sql = dao_log.insert_log(username, 'update info')
+    cmd_list.append(cmd)
+    cmd_list.append(log_sql)
+    dao_core.execute_sql_list(cmd_list)
 
 
 def get_employee_by_dept(dept):

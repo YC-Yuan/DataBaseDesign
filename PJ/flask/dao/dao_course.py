@@ -1,5 +1,5 @@
 from constants.info import *
-from dao import dao_user, dao_core, dao_dept, dao_participate
+from dao import dao_user, dao_core, dao_dept, dao_participate, dao_log
 import pymysql as sql
 import utils
 
@@ -120,35 +120,6 @@ def get_dept_course(dept_name):
     return courses
 
 
-'''
-课程相关操作
-    获取全部课程
-    获取部门下课程
-    课程
-    修改课程部分信息（不能改结束时间）
-    
-'''
-
-
-#   获取全部课程信息
-def get_course_info():
-    conn = dao_core.get_db()
-    cursor = conn.cursor()
-    try:
-        select_sql = "SELECT * FROM course;"
-        cursor.execute(select_sql)
-        courses = utils.dict_fetch_all(cursor)
-        for course in courses:
-            course['start_time'] = utils.date_to_string(course['start_time'])
-            course['end_time'] = utils.date_to_string(course['end_time'])
-        print(courses)
-    except sql.MySQLError as e:
-        print(e)
-    finally:
-        cursor.close()
-        conn.close()
-
-
 #   获取教师教的课的信息
 def get_courses(instructor_id):
     try:
@@ -169,33 +140,27 @@ def get_courses(instructor_id):
 
 
 #   创建课程
-def insert_course(instructor_id, course_id, name, content, category, start_time, end_time):
-    try:
-        conn = dao_core.get_db()
-        cursor = conn.cursor()
-        start_time = utils.string_to_date(start_time)
-        end_time = utils.string_to_date(end_time)
-        if end_time < start_time:
-            raise sql.MySQLError("结束时间不能早于开始时间")
-        insert_sql = "INSERT INTO course VALUES (%s, %s, %s, %s, %s, %s, %s);"
-        cursor.execute(insert_sql, (course_id, name, content, category, start_time, end_time, instructor_id,))
-        conn.commit()
-        print(instructor_id + " add_course " + course_id)
-    except sql.MySQLError as e:
-        print(e)
-        conn.rollback()
-    finally:
-        cursor.close()
-        conn.close()
+def insert_course(username, instructor_id, course_id, name, content, category, start_time, end_time):
+    cmd_list = []
+    operation = "create course %s (instructor: %s)" % (course_id, instructor_id)
+    start_time = utils.string_to_date(start_time)
+    end_time = utils.string_to_date(end_time)
+    insert_sql = 'INSERT INTO course VALUES ("%s", "%s", "%s", "%s", "%s", "%s", "%s")' % \
+                 (course_id, name, content, category, start_time, end_time, instructor_id)
+    cmd_list.append(insert_sql)
+    log_sql = dao_log.insert_log(username, operation)
+    cmd_list.append(log_sql)
+    dao_core.execute_sql_list(cmd_list)
 
 
 #   设置课程要求
 #   require: obligatory(必修) elective(选修) disable(不可选)
-def set_course_require(course_id, dept_name, require):
+def set_course_require(username, course_id, dept_name, require):
     conn = dao_core.get_db()
     cursor = conn.cursor()
     try:
         dept_id = dao_dept.get_dept_id(dept_name)
+        operation = "set course %s to %s" % (course_id, require)
         #   取消课程
         if require == DISABLE:
             delete_sql = "DELETE FROM offer WHERE course_id = %s AND dept_id = %s"
@@ -222,7 +187,8 @@ def set_course_require(course_id, dept_name, require):
                     insert_sql = "INSERT INTO take (user_id, course_id) SELECT %s, %s FROM dual WHERE NOT EXISTS " \
                                  "(SELECT * FROM take WHERE user_id = %s AND course_id = %s)"
                     cursor.execute(insert_sql, (user_id, course_id, user_id, course_id,))
-        print("Admin set_course " + course_id + " " + require + " " + dept_name)
+        log_sql = dao_log.insert_log(username, operation)
+        cursor.execute(log_sql)
         conn.commit()
     except sql.MySQLError as e:
         print(e)
@@ -233,19 +199,14 @@ def set_course_require(course_id, dept_name, require):
 
 
 #   删除课程
-def delete_course(course_id):
-    conn = dao_core.get_db()
-    cursor = conn.cursor()
-    try:
-        delete_sql = "DELETE FROM course WHERE course_id = %s"
-        cursor.execute(delete_sql, (course_id,))
-        conn.commit()
-    except sql.MySQLError as e:
-        print(e)
-        conn.rollback()
-    finally:
-        cursor.close()
-        conn.close()
+def delete_course(username, course_id):
+    cmd_list = []
+    delete_sql = 'DELETE FROM course WHERE course_id = "%s"' % course_id
+    operation = 'delete course %s' % course_id
+    cmd_list.append(delete_sql)
+    log_sql = dao_log.insert_log(username, operation)
+    cmd_list.append(log_sql)
+    dao_core.execute_sql_list(cmd_list)
 
 
 #   更新课程状态（指结课）

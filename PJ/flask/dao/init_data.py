@@ -49,13 +49,13 @@ def init_data():
                     '19302017321@fudan.edu.com', '开发部门')
     insert_employee('19302018754', 'password', '19302018754', '茄子', '女', 22, '2020-9-10', '上海', '18981981193',
                     '19302018754@fudan.edu.com', '开发部门')
-    insert_course('19302011478', '33160', '手游策划', '薅玩家羊毛', '策划', '2020-5-17', '2020-12-08')
-    insert_course('19302012545', '35142', '数据库设计', '数据库设计', '开发', '2021-3-10', '2021-7-18')
-    insert_course('19302012545', '35155', '软件测试', '软件测试', '测试', '2021-7-12', '2021-12-31')
-    set_course_require('33160', '策划部门', MANDATORY)
-    set_course_require('35142', '开发部门', MANDATORY)
-    set_course_require('35142', '策划部门', OPTIONAL)
-    set_course_require('35155', '开发部门', OPTIONAL)
+    insert_course(ADMIN_USERNAME, '19302011478', '33160', '手游策划', '薅玩家羊毛', '策划', '2020-5-17', '2020-12-08')
+    insert_course(ADMIN_USERNAME, '19302012545', '35142', '数据库设计', '数据库设计', '开发', '2021-3-10', '2021-7-18')
+    insert_course(ADMIN_USERNAME, '19302012545', '35155', '软件测试', '软件测试', '测试', '2021-7-12', '2021-12-31')
+    set_course_require(ADMIN_USERNAME, '33160', '策划部门', MANDATORY)
+    set_course_require(ADMIN_USERNAME, '35142', '开发部门', MANDATORY)
+    set_course_require(ADMIN_USERNAME, '35142', '策划部门', OPTIONAL)
+    set_course_require(ADMIN_USERNAME, '35155', '开发部门', OPTIONAL)
     update_courses_state()
 
 

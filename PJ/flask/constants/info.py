@@ -3,6 +3,8 @@ INSTRUCTOR = "教员"
 LEADER = "部门主管"
 ADMIN = "系统管理员"
 
+ADMIN_USERNAME = "ADMIN"
+
 MANDATORY = "必修"
 OPTIONAL = "选修"
 DISABLE = "不可选"
