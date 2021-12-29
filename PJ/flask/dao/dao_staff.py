@@ -123,3 +123,59 @@ def search_by_course_and_evaluation(dept_name, course, is_category, evaluation=N
     finally:
         cursor.close()
         conn.close()
+
+
+'''
+    根据课程结果的状态和考试次数查找
+    :param  dept_name   部门名称
+    :param  course_id   课程编号_id
+    :param  is_fail     总次数/失败次数    True/False
+    :param  num         考试次数
+    :param  compare     大于/等于/小于
+    :return 员工号 员工姓名 课程ID 课程名 课程类型 成绩状态
+'''
+
+
+def search_by_test(dept_name, course_id, is_fail, num, compare):
+    try:
+        conn = dao_core.get_db()
+        cursor = conn.cursor()
+        if compare == GREATER:
+            compare = '>'
+        elif compare == EQUAL:
+            compare = '='
+        elif compare == LESS:
+            compare = '<'
+        if is_fail:
+            select_sql = 'SELECT * FROM (SELECT * FROM (SELECT user_id, name FROM employee ' \
+                         'WHERE dept_name = "%s") AS E ' \
+                         'NATURAL JOIN staff) AS A ' \
+                         'NATURAL JOIN (SELECT * FROM(SELECT course_id, name AS c_name, category FROM course ' \
+                         'WHERE course_id = "%s") AS C ' \
+                         'NATURAL JOIN (SELECT user_id, course_id, COUNT(user_id) AS num FROM participate ' \
+                         'WHERE course_id = "%s" AND score < 60 ' \
+                         'GROUP BY user_id HAVING COUNT(user_id) %s %s) AS P) AS B;' % (dept_name, course_id, course_id, compare, num)
+        else:
+            select_sql = 'SELECT * FROM (SELECT * FROM (SELECT user_id, name FROM employee ' \
+                         'WHERE dept_name = "%s") AS E ' \
+                         'NATURAL JOIN staff) AS A ' \
+                         'NATURAL JOIN (SELECT * FROM(SELECT course_id, name as c_name, category FROM course ' \
+                         'WHERE course_id = "%s") AS C ' \
+                         'NATURAL JOIN (SELECT user_id, course_id, COUNT(user_id) AS num FROM participate ' \
+                         'WHERE course_id = "%s" ' \
+                         'GROUP BY user_id HAVING COUNT(user_id) %s %s) AS P) AS B;' % \
+                         (dept_name, course_id, course_id, compare, num)
+        cursor.execute(select_sql)
+        infos = utils.dict_fetch_all(cursor)
+        for info in infos:
+            info['tests'] = dao_participate.get_tests_by_uc(info['user_id'], info['course_id'])
+        print(infos)
+    except sql.MySQLError as e:
+        print(e)
+    finally:
+        cursor.close()
+        conn.close()
+
+
+search_by_test("开发部门", '35142', True, 2, LESS)
+search_by_test("开发部门", '35142', True, 2, GREATER)

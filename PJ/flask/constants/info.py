@@ -14,3 +14,7 @@ FAILED = "未通过"
 UNSELECTED = "未选课"
 
 PASS_LINE = 60
+
+GREATER = "大于"
+EQUAL = "等于"
+LESS = "小于"
