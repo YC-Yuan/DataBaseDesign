@@ -3,7 +3,6 @@ from dao import dao_user, dao_core, dao_dept, dao_participate, dao_log
 import pymysql as sql
 import utils
 
-
 '''
     课程相关操作:
     · 获取全部课程
@@ -104,7 +103,7 @@ def get_course_history_by_uid(user_id):
 
 
 # 根据dept_name搜索课程
-def get_dept_course(dept_name):
+def get_course_by_dept_name(dept_name):
     conn = dao_core.get_db()
     cursor = conn.cursor()
     select_sql = "SELECT * FROM ((SELECT * FROM offer WHERE dept_id IN (SELECT dept_id FROM department WHERE " \
@@ -121,10 +120,10 @@ def get_dept_course(dept_name):
 
 
 #   获取教师教的课的信息
-def get_courses(instructor_id):
+def get_courses_by_instructor(instructor_id):
+    conn = dao_core.get_db()
+    cursor = conn.cursor()
     try:
-        conn = dao_core.get_db()
-        cursor = conn.cursor()
         select_sql = "SELECT * FROM course WHERE instructor_id = %s"
         cursor.execute(select_sql, (instructor_id,))
         courses = utils.dict_fetch_all(cursor)
