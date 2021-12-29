@@ -52,6 +52,30 @@
                     </div>
                     <div class="tab-pane fade" id="list-course" role="tabpanel" aria-labelledby="list-profile-list">
                         {# 部门所开课程 #}
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th scope="col">课程</th>
+                                <th scope="col">内容</th>
+                                <th scope="col">类别</th>
+                                <th scope="col">教员</th>
+                                <th scope="col">修读要求</th>
+                                <th scope="col">起止时间</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for course in courses %}
+                                <tr>
+                                    <th scope="row">{{ course.name }}</th>
+                                    <td>{{ course.content }}</td>
+                                    <td>{{ course.category }}</td>
+                                    <td>{{ course.instructor }}</td>
+                                    <td>{{ course.need }}</td>
+                                    <td>{{ course.start_time }} 至 {{ course.end_time }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
                         {{ courses }}
                     </div>
                 </div>

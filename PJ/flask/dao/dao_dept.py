@@ -3,7 +3,6 @@ from dao import dao_core
 import pymysql as sql
 import utils
 
-
 '''
     部门相关操作:
     · 获取部门ID
@@ -12,7 +11,6 @@ import utils
     · 获取部门下必修课ID
     · 获取部门下符合转部门情况的员工
 '''
-
 
 '''
     获取部门ID
@@ -33,30 +31,6 @@ def get_dept_id(dept_name):
 
 
 '''
-    获取部门下员工
-    :param  dept_name   部门名称
-    :return user_infos  员工信息
-'''
-
-
-def get_dept_user(dept_name):
-    try:
-        conn = dao_core.get_db()
-        cursor = conn.cursor()
-        select_sql = "SELECT * FROM employee WHERE dept_name = %s"
-        cursor.execute(select_sql, (dept_name,))
-        user_infos = utils.dict_fetch_all(cursor)
-        for user in user_infos:
-            user['hire_date'] = utils.date_to_string(user['hire_date'])
-        print(user_infos)
-    except sql.MySQLError as e:
-        print(e)
-    finally:
-        cursor.close()
-        conn.close()
-
-
-'''
     获取部门下课程
     :param  dept_name   部门名称
     :return courses_infos  课程信息
@@ -66,9 +40,9 @@ def get_dept_user(dept_name):
 def get_dept_course(dept_name):
     conn = dao_core.get_db()
     cursor = conn.cursor()
-    select_sql = "SELECT * FROM ((SELECT * FROM offer WHERE dept_id IN (SELECT dept_id FROM department WHERE " \
-                 "name = %s)) AS O NATURAL JOIN course)"
-    cursor.execute(select_sql, (dept_name,))
+    dept_id = get_dept_id(dept_name)
+    select_sql = "SELECT * FROM ((SELECT * FROM offer WHERE dept_id = %s) AS O NATURAL JOIN course)"
+    cursor.execute(select_sql, (dept_id,))
     courses = utils.dict_fetch_all(cursor)
     for course in courses:
         course['start_time'] = utils.date_to_string(course['start_time'])
@@ -154,5 +128,3 @@ def get_dept_need_take_course(user_id, dept_name):
     finally:
         cursor.close()
         conn.close()
-
-
