@@ -21,14 +21,14 @@ CREATE TABLE admin
 
 CREATE TABLE employee
 (
-    user_id   CHAR(11)     NOT NULL,
-    username  VARCHAR(20)  NOT NULL,
+    user_id   CHAR(11)     NOT NULL CHECK (LENGTH(user_id) = 11),
+    username  VARCHAR(20)  NOT NULL UNIQUE,
     name      VARCHAR(20)  NOT NULL,
     gender    VARCHAR(10)  NOT NULL CHECK (gender IN ("男", "女")),
     age       INTEGER      NOT NULL CHECK (age >= 0),
     hire_date DATE         NOT NULL,
     city      VARCHAR(255) NOT NULL,
-    telephone CHAR(11)     NOT NULL,
+    telephone CHAR(11)     NOT NULL CHECK (LENGTH(telephone) = 11),
     email     VARCHAR(255) NOT NULL,
     dept_name VARCHAR(20),
     PRIMARY KEY (user_id),

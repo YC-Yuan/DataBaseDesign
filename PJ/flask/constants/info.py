@@ -11,5 +11,6 @@ DISABLE = "不可选"
 
 PASSED = "通过"
 FAILED = "未通过"
+UNSELECTED = "未选课"
 
 PASS_LINE = 60
