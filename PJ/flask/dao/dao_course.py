@@ -216,4 +216,10 @@ def update_courses_state():
     dao_core.execute_sql(update_sql)
 
 
+# 查看课程是否结束
+def is_over(course_id):
+    # TODO
+    return False
+
+
 update_courses_state()

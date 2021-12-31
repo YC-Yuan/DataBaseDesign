@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template
-from dao import dao_core, dao_dept, dao_course, dao_staff, dao_employee, dao_leader, dao_instructor
+from dao import dao_core, dao_dept, dao_course, dao_staff, dao_employee, dao_leader, dao_participate
 
 bp_route = Blueprint('route', __name__, url_prefix="")
 
@@ -37,7 +37,11 @@ def instructor(user_id):
     courses = dao_course.get_courses_by_instructor(instructor_id=user_id)
     for course in courses:
         # 添加学生和最高得分
-        students = dao_staff.get_staff_by_course_id(course_id=course['course_id'])
+        course_id = course['course_id']
+        students = dao_staff.get_staff_by_course_id(course_id=course_id)
+        for student in students:
+            best_score = dao_participate.get_best_score(student['user_id'], course_id)
+            student['score'] = best_score
         course['students'] = students
     return render_template('instructor/instructor.html', instructor=instructor, courses=courses)
 

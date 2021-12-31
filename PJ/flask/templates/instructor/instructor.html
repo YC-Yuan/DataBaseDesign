@@ -35,7 +35,7 @@
                                     <th scope="col">员工号</th>
                                     <th scope="col">姓名</th>
                                     <th scope="col">入职日期</th>
-                                    <th scope="col">所在城市</th>
+                                    <th scope="col">最佳成绩</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -46,7 +46,7 @@
                                         </th>
                                         <td>{{ s.name }}</td>
                                         <td>{{ s.hire_date }}</td>
-                                        <td>{{ s.city }}</td>
+                                        <td>{{ s.score }}</td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>
@@ -54,7 +54,23 @@
                         {% endfor %}
                     </div>
                     <div class="tab-pane fade" id="list-score" role="tabpanel" aria-labelledby="index-score">
-
+                        <form action="" method="post">
+                            <div class="form-group">
+                                <label for="course">课程</label>
+                                <input type="text" name="city" class="form-control" id="course"
+                                       value="">
+                            </div>
+                            <div class="form-group">
+                                <label for="user_id">员工号</label>
+                                <input type="text" name="city" class="form-control" id="user_id"
+                                       value="">
+                            </div>
+                            <div class="form-group">
+                                <label for="score">分数</label>
+                                <input type="number" name="city" class="form-control" id="score">
+                            </div>
+                            <input type="hidden" name="instructor_id" value="{{ instructor.user_id }}">
+                        </form>
                     </div>
                 </div>
             </div>
