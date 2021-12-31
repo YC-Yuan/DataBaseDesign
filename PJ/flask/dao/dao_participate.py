@@ -48,6 +48,8 @@ def get_tests_by_uc(user_id, course_id):
 
 #   录入成绩
 def score_input(instructor_username, user_id, course_id, score):
+    score = int(score)
+    msg = ''
     conn = dao_core.get_db()
     cursor = conn.cursor()
     try:
@@ -59,7 +61,8 @@ def score_input(instructor_username, user_id, course_id, score):
             cursor.execute(select_sql, (user_id, course_id,))
             eva = cursor.fetchone()[0]
             if eva == PASSED:
-                raise sql.MySQLError("禁止卷逼刷分")
+                msg = "已经通过，无需考试"
+                raise sql.MySQLError(msg)
             insert_sql = "INSERT INTO participate VALUES (%s, %s, %s, %s)"
             cursor.execute(insert_sql, (user_id, course_id, utils.get_current_timestamp(), score,))
             #   及格则自动修改状态
@@ -70,13 +73,14 @@ def score_input(instructor_username, user_id, course_id, score):
             log_sql = dao_log.insert_log(instructor_username, operation)
             cursor.execute(log_sql)
             conn.commit()
-            return True
+            return True, "录入成功"
         else:
-            raise sql.MySQLError("尚未结课")
+            msg = "尚未结课"
+            raise sql.MySQLError(msg)
     except sql.MySQLError as e:
         print(e)
         conn.rollback()
-        return False
+        return False, msg
     finally:
         cursor.close()
         conn.close()

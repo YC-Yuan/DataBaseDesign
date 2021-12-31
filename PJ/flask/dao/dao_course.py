@@ -216,10 +216,34 @@ def update_courses_state():
     dao_core.execute_sql(update_sql)
 
 
+def get_course_by_name(name):
+    cmd = 'select * from course where name = "%s"' % name
+    conn = dao_core.get_db()
+    cursor = conn.cursor()
+    cursor.execute(cmd)
+    course = utils.dict_fetch_one(cursor)
+    cursor.close()
+    conn.close()
+    return course
+
+
 # 查看课程是否结束
 def is_over(course_id):
-    # TODO
-    return False
+    conn = dao_core.get_db()
+    cursor = conn.cursor()
+    try:
+        select_sql = "SELECT end_time FROM course WHERE course_id = %s;"
+        cursor.execute(select_sql, (course_id,))
+        row = cursor.fetchone()
+        if row is None:
+            raise sql.MySQLError("课程不存在")
+        return utils.check_course_end(row[0])
+    except sql.MySQLError as e:
+        print(e)
+        conn.rollback()
+    finally:
+        cursor.close()
+        conn.close()
 
 
 update_courses_state()
