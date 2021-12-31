@@ -33,7 +33,11 @@ def staff(user_id):
 
 
 def instructor(user_id):
-    return render_template('instructor.html')
+    courses = dao_course.get_courses_by_instructor(instructor_id=user_id)
+    for course in courses:
+        students = dao_staff.get_staff_by_course_id(course_id=course['course_id'])
+        course['students'] = students
+    return render_template('instructor/instructor.html', courses=courses)
 
 
 def leader(user_id):

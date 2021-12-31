@@ -18,10 +18,10 @@ def login():
         user_id = dao_user.get_user_id(username)
         if dao_user.is_leader(user_id):
             return route.leader(user_id)
-        if dao_user.is_staff(user_id):
-            return route.staff(user_id)
         if dao_user.is_instructor(user_id):
             return route.instructor(user_id)
+        if dao_user.is_staff(user_id):
+            return route.staff(user_id)
     else:
         # 登录失败
         return route.login_failed(msg="用户名或密码错误")

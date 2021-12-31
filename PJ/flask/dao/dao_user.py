@@ -2,7 +2,6 @@ from dao import dao_core
 from constants import info
 import pymysql as sql
 
-
 '''
     User功能：
     获取用户ID
@@ -81,7 +80,7 @@ def is_admin(username):
 def is_staff(user_id):
     conn = dao_core.get_db()
     cursor = conn.cursor()
-    select_sql = "select count(*) from employee where user_id= %s"
+    select_sql = "select count(*) from staff where user_id= %s"
     cursor.execute(select_sql, (user_id,))
     count = cursor.fetchone()[0]
     cursor.close()

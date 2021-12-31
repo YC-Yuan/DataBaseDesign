@@ -36,7 +36,7 @@ def get_course_info():
         conn.close()
 
 
-#   根据员工号搜索进行课程
+# 根据员工号搜索进行课程
 def get_course_by_uid(user_id):
     conn = dao_core.get_db()
     cursor = conn.cursor()
@@ -131,6 +131,7 @@ def get_courses_by_instructor(instructor_id):
             course['start_time'] = utils.date_to_string(course['start_time'])
             course['end_time'] = utils.date_to_string(course['end_time'])
         print(courses)
+        return courses
     except sql.MySQLError as e:
         print(e)
     finally:

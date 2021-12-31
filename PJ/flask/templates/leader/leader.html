@@ -44,7 +44,7 @@
                             {% for e in employee %}
                                 <tr>
                                     <th scope="row"><a
-                                            href="{{ url_for('leader.score') }}?uid={{ e.user_id }}">{{ e.user_id }}</a>
+                                            href="{{ url_for('leader.change_dept') }}?uid={{ e.user_id }}">{{ e.user_id }}</a>
                                     </th>
                                     <td>{{ e.name }}</td>
                                     <td>{{ e.hire_date }}</td>
