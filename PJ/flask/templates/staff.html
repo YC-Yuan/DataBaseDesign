@@ -84,7 +84,8 @@
                                 <th scope="col">内容</th>
                                 <th scope="col">类别</th>
                                 <th scope="col">教员</th>
-                                <th scope="col">起止时间</th>
+                                <th scope="col">授课时间</th>
+                                <th scope="col">成绩</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -95,6 +96,7 @@
                                     <td>{{ course.category }}</td>
                                     <td>{{ course.instructor }}</td>
                                     <td>{{ course.start_time }} 至 {{ course.end_time }}</td>
+                                    <td>{{ course.score }}</td>
                                 </tr>
                             {% endfor %}
                             </tbody>

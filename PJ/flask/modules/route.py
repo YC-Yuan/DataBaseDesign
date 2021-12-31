@@ -26,6 +26,9 @@ def staff(user_id):
     info = dao_staff.get_user_info(user_id)
     # 查找课程与教员
     courses = dao_course.get_course_by_uid(user_id)
+    for course in courses:
+        best_score = dao_participate.get_best_score(user_id, course['course_id'])
+        course['score'] = best_score
     # 查找历史上课信息
     history = dao_course.get_course_history_by_uid(user_id)
     return render_template('staff.html',
