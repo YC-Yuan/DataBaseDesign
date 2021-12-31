@@ -50,13 +50,13 @@ def score_input(instructor_username, user_id, course_id, score):
             log_sql = dao_log.insert_log(instructor_username, operation)
             cursor.execute(log_sql)
             conn.commit()
+            return True
         else:
             raise sql.MySQLError("尚未结课")
     except sql.MySQLError as e:
         print(e)
         conn.rollback()
+        return False
     finally:
         cursor.close()
         conn.close()
-
-

@@ -3,7 +3,6 @@ from dao import dao_user, dao_core, dao_log
 import pymysql as sql
 import utils
 
-
 '''
     职员功能：
     获取全部员工信息
@@ -33,7 +32,7 @@ def get_employee_info():
 
 
 #   按姓名查询员工信息
-def search_employee_by_name(name):
+def get_employee_by_name(name):
     conn = dao_core.get_db()
     cursor = conn.cursor()
     try:
@@ -56,18 +55,13 @@ def search_employee_by_name(name):
 
 
 #   按员工号查询员工信息
-def search_employee_by_uid(user_id):
+def get_employee_by_uid(user_id):
     conn = dao_core.get_db()
     cursor = conn.cursor()
     try:
-        select_sql = "SELECT * FROM staff WHERE user_id = %s"
-        cursor.execute(select_sql, (user_id,))
-        staff_info = cursor.fetchone()
-        select_sql = "SELECT * FROM take WHERE user_id = %s"
-        cursor.execute(select_sql, (user_id,))
-        take_info = cursor.fetchall()
-        # TODO
-
+        cmd = 'select * from employee where user_id = %s'
+        cursor.execute(cmd, user_id)
+        return utils.dict_fetch_one(cursor)
     except sql.MySQLError as e:
         print(e)
     finally:

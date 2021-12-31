@@ -3,10 +3,7 @@ import pymysql as sql
 from dao.dao_core import *
 import utils
 
-
 ''' 教师相关功能 '''
-
-
 
 
 #   检查教师权限
