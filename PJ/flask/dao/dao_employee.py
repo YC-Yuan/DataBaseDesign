@@ -109,7 +109,7 @@ def modify_info(user_id, city, telephone, email):
     cmd_list = []
     cmd = 'UPDATE employee SET city= "%s",telephone= "%s",email= "%s" ' \
           'WHERE user_id= "%s"' % (city, telephone, email, user_id)
-    username = dao_user.get_user_name(user_id)
+    username = dao_user.get_username(user_id)
     log_sql = dao_log.insert_log(username, 'update info')
     cmd_list.append(cmd)
     cmd_list.append(log_sql)
@@ -133,3 +133,16 @@ def get_employee_by_dept(dept):
     cursor.close()
     conn.close()
     return res
+
+
+# 查职员姓名
+
+def get_employee_name(user_id):
+    conn = dao_core.get_db()
+    cursor = conn.cursor()
+    select_sql = "SELECT name FROM employee WHERE user_id = %s"
+    cursor.execute(select_sql, (user_id,))
+    row = cursor.fetchone()
+    if row is None:
+        raise sql.MySQLError("{} does not exist".format(user_id))
+    return row[0]

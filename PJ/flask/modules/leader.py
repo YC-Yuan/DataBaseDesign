@@ -19,11 +19,11 @@ def score():
 @bp_leader.route('/employee/change_dept', methods=['POST'])
 def change_dept():
     lid = request.values.get('leader_id')
-    leader_name = dao_user.get_user_name(lid)
+    leader_username = dao_user.get_username(lid)
     uid = request.values.get('uid')
     dept = request.values.get('dept')
     try:
-        dao_staff.transfer_dept(username=leader_name, user_id=uid, dept_name=dept)
+        dao_staff.transfer_dept(username=leader_username, user_id=uid, dept_name=dept)
     except sql.MySQLError as e:
         print(e)
         return "出错了"
