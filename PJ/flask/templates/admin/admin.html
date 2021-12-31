@@ -7,6 +7,200 @@
 
 </head>
 <body>
+<div class="container">
+    <div class="jumbotron mt-2">
+        <h1 class="display-4">系统管理员</h1>
+        <hr class="my-4">
+        <div class="row">
+            <div class="col-3">
+                <div class="list-group" id="list-tab" role="tablist">
+                    <a class="list-group-item list-group-item-action active"
+                       id="list-home-list" data-toggle="list"
+                       href="#list-info" role="tab">系统日志</a>
+                    <a class="list-group-item list-group-item-action" id="list-course-list" data-toggle="list"
+                       href="#list-course" role="tab">课程总览</a>
+                    <a class="list-group-item list-group-item-action" id="list-employee-list" data-toggle="list"
+                       href="#list-employee" role="tab">课程总览</a>
+                </div>
+            </div>
+            <div class="col-9">
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="list-info" role="tabpanel"
+                         aria-labelledby="list-home-list">
+                        <table class="table table-bordered">
+                            <tbody>
+                            <tr>
+                                <th>记录号</th>
+                                <td>操作者</td>
+                                <td>内容</td>
+                                <td>时间</td>
+                            </tr>
+                            {% for log in logs %}
+                                <tr>
+                                    <th>{{ log.log_id }}</th>
+                                    <th>{{ log.username }}</th>
+                                    <th>{{ log.operation }}</th>
+                                    <th>{{ log.date }}</th>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tab-pane fade" id="list-course" role="tabpanel" aria-labelledby="list-course-list">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>课程编号</th>
+                                <td>课程名</td>
+                                <td>内容</td>
+                                <td>类别</td>
+                                <td>授课时段</td>
+                                <td>教员</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for course in courses %}
+                                <tr>
+                                    <th>{{ course.course_id }}</th>
+                                    <td>{{ course.name }}</td>
+                                    <td>{{ course.content }}</td>
+                                    <td>{{ course.category }}</td>
+                                    <td>{{ course.start_time }}至{{ course.end_time }}</td>
+                                    <td>{{ course.instructor }}</td>
+                                </tr>
+                            {% endfor %}</tbody>
+                        </table>
+                        <form action="{{ url_for('admin.create_course') }}" method="post">
+                            <input hidden name="admin" value="{{ admin }}">
+                            <div class="form-group">
+                                <label>教员</label>
+                                <input type="text" name="instructor" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>课程编号</label>
+                                <input type="number" name="course_id" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>课程名</label>
+                                <input type="text" name="name" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>内容简述</label>
+                                <input type="text" name="content" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>类别</label>
+                                <input type="text" name="category" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>开始日期</label>
+                                <input type="date" name="start_time" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>结课日期</label>
+                                <input type="date" name="end_time" class="form-control">
+                            </div>
+                            <button class="btn btn-outline-success">创建新课程</button>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="list-employee" role="tabpanel" aria-labelledby="list-employee-list">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>UID</th>
+                                <td>用户名</td>
+                                <td>姓名</td>
+                                <td>性别</td>
+                                <td>年龄</td>
+                                <td>入职日期</td>
+                                <td>所在城市</td>
+                                <td>电话</td>
+                                <td>邮箱</td>
+                                <td>所在部门</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for e in employee %}
+                                <tr>
+                                    <th>{{ e.user_id }}</th>
+                                    <td>{{ e.username }}</td>
+                                    <td>{{ e.name }}</td>
+                                    <td>{{ e.gender }}</td>
+                                    <td>{{ e.age }}</td>
+                                    <td>{{ e.hire_date }}</td>
+                                    <td>{{ e.city }}</td>
+                                    <td>{{ e.telephone }}</td>
+                                    <td>{{ e.email }}</td>
+                                    <td>{{ e.dept_name }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        <form action="{{ url_for('admin.create_employee') }}" method="post">
+                            <input hidden name="admin" value="{{ admin }}">
+                            <div class="form-group">
+                                <label>用户名</label>
+                                <input type="text" name="username" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>密码</label>
+                                <input type="password" name="pwd" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>UID</label>
+                                <input type="text" name="user_id" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>名字</label>
+                                <input type="text" name="name" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>性别</label>
+                                <select name="gender">
+                                    <option value="男">男</option>
+                                    <option value="男女">女</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>年龄</label>
+                                <input type="number" name="age" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>入职日期</label>
+                                <input type="date" name="hire_date" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>城市</label>
+                                <input type="text" name="city" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>电话</label>
+                                <input type="tel" name="telephone" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>邮箱</label>
+                                <input type="email" name="email" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>部门</label>
+                                <input type="text" name="dept_name" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>角色</label>
+                                <select name="role">
+                                    <option selected value="员工">员工</option>
+                                    <option value="教员">教员</option>
+                                    <option value="部门主管">部门主管</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-outline-success">注册新员工</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
 <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>

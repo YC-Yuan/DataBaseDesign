@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template
-from dao import dao_core, dao_dept, dao_course, dao_staff, dao_employee, dao_leader, dao_participate
+from dao import dao_log, dao_dept, dao_course, dao_staff, dao_employee, dao_leader, dao_participate
 
 bp_route = Blueprint('route', __name__, url_prefix="")
 
@@ -66,4 +66,7 @@ def leader(user_id):
 
 
 def admin(username):
-    return render_template('admin/admin.html')
+    courses = dao_course.get_course_info()
+    logs = dao_log.get_log_info()
+    employee = dao_employee.get_employee_info()
+    return render_template('admin/admin.html', admin=username, logs=logs, courses=courses, employee=employee)

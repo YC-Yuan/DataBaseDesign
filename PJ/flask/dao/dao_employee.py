@@ -23,6 +23,7 @@ def get_employee_info():
         user_infos = utils.dict_fetch_all(cursor)
         for user in user_infos:
             user['hire_date'] = utils.date_to_string(user['hire_date'])
+        return user_infos
     except sql.MySQLError as e:
         print(e)
         conn.rollback()
@@ -38,15 +39,7 @@ def get_employee_by_name(name):
     try:
         select_sql = "SELECT * FROM employee WHERE name = %s"
         cursor.execute(select_sql, (name,))
-        e_info = cursor.fetchall()
-        take_info = []
-        for employee in e_info:
-            user_id = employee[0]
-            select_sql = "SELECT * FROM take WHERE user_id = %s"
-            cursor.execute(select_sql, (user_id,))
-            take_info.append(cursor.fetchone())
-        # TODO
-
+        return utils.dict_fetch_one(cursor)
     except sql.MySQLError as e:
         print(e)
     finally:

@@ -16,7 +16,7 @@ def get_log_info():
         select_sql = "SELECT * FROM log;"
         cursor.execute(select_sql)
         rows = utils.dict_fetch_all(cursor)
-        print(rows)
+        return rows
     except sql.MySQLError as e:
         print(e)
         conn.rollback()

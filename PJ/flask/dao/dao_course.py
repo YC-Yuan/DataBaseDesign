@@ -26,9 +26,10 @@ def get_course_info():
         cursor.execute(select_sql)
         courses = utils.dict_fetch_all(cursor)
         for course in courses:
+            course['instructor'] = dao_employee.get_employee_name(course['instructor_id'])
             course['start_time'] = utils.date_to_string(course['start_time'])
             course['end_time'] = utils.date_to_string(course['end_time'])
-        print(courses)
+        return courses
     except sql.MySQLError as e:
         print(e)
     finally:
