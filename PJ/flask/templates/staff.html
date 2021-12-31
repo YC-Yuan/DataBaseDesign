@@ -86,6 +86,7 @@
                                 <th scope="col">教员</th>
                                 <th scope="col">授课时间</th>
                                 <th scope="col">成绩</th>
+                                <th scope="col">历史成绩</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -97,6 +98,10 @@
                                     <td>{{ course.instructor }}</td>
                                     <td>{{ course.start_time }} 至 {{ course.end_time }}</td>
                                     <td>{{ course.score }}</td>
+                                    <td>{% for score in course.scores %}
+                                        {{ score.score }}
+                                    {% endfor %}
+                                    </td>
                                 </tr>
                             {% endfor %}
                             </tbody>

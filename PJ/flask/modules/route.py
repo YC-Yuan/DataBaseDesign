@@ -20,6 +20,7 @@ def login_failed(msg):
     return render_template('login.html', msg=msg)
 
 
+@bp_route.route('/staff/<user_id>')
 # 获取员工信息传给前端
 def staff(user_id):
     # 查找个人信息
@@ -28,7 +29,9 @@ def staff(user_id):
     courses = dao_course.get_course_by_uid(user_id)
     for course in courses:
         best_score = dao_participate.get_best_score(user_id, course['course_id'])
+        scores = dao_participate.get_scores(user_id, course['course_id'])
         course['score'] = best_score
+        course['scores'] = scores
     # 查找历史上课信息
     history = dao_course.get_course_history_by_uid(user_id)
     return render_template('staff.html',

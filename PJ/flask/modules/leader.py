@@ -1,7 +1,7 @@
 # leader 后端服务
 
-from flask import Blueprint, request
-from dao import dao_user, dao_employee, dao_course, dao_staff
+from flask import Blueprint, request, jsonify
+from dao import dao_user, dao_staff
 from modules import route
 import pymysql as sql
 
@@ -28,3 +28,25 @@ def change_dept():
         print(e)
         return "出错了"
     return "成功"
+
+
+@bp_leader.route('/search/category', methods=['POST'])
+def search_by_category():
+    dept_name = request.values.get('dept_name')
+    category = request.values.get('category')
+    evaluation = request.values.get('evaluation')
+    if evaluation == "":
+        evaluation = None
+    res = dao_staff.search_by_course_and_evaluation(dept_name, category, True, evaluation)
+    return jsonify(res)
+
+
+@bp_leader.route('/search/course_id', methods=['POST'])
+def search_by_course_id():
+    dept_name = request.values.get('dept_name')
+    category = request.values.get('course_id')
+    evaluation = request.values.get('evaluation')
+    if evaluation == "":
+        evaluation = None
+    res = dao_staff.search_by_course_and_evaluation(dept_name, category, False, evaluation)
+    return jsonify(res)

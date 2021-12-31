@@ -53,7 +53,7 @@ def get_course_by_uid(user_id):
             r['tests'] = dao_participate.get_tests_by_uc(user_id=user_id, course_id=r['course_id'])
             r['start_time'] = utils.date_to_string(r['start_time'])
             r['end_time'] = utils.date_to_string(r['end_time'])
-            r['instructor'] = dao_employee.get_employee_name(['instructor_id'])
+            r['instructor'] = dao_employee.get_employee_name(r['instructor_id'])
             courses.append(r)
         return courses
     except sql.MySQLError as e:

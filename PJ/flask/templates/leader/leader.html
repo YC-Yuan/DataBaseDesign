@@ -23,6 +23,9 @@
                     <a class="list-group-item list-group-item-action"
                        id="index-change-dept" data-toggle="list"
                        href="#list-change-dept" role="tab">成员转部</a>
+                    <a class="list-group-item list-group-item-action"
+                       id="index-search" data-toggle="list"
+                       href="#list-search" role="tab">成绩查询</a>
                 </div>
             </div>
             <div class="col-9">
@@ -44,7 +47,7 @@
                             {% for e in employee %}
                                 <tr>
                                     <th scope="row"><a
-                                            href="{{ url_for('leader.change_dept') }}?uid={{ e.user_id }}">{{ e.user_id }}</a>
+                                            href="{{ url_for('route.staff',user_id=e.user_id) }}">{{ e.user_id }}</a>
                                     </th>
                                     <td>{{ e.name }}</td>
                                     <td>{{ e.hire_date }}</td>
@@ -128,6 +131,32 @@
                                 }
                             })
                         </script>
+                    </div>
+                    <div class="tab-pane fade" id="list-search" role="tabpanel"
+                         aria-labelledby="index-search"
+                    >
+                        <form action="{{ url_for('leader.search_by_category') }}" method="post"
+                              id="search-category-form">按类搜索
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text">类别</label>
+                                </div>
+                                <input type="text" name="category">
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text">授课结果</label>
+                                </div>
+                                <select class="custom-select" name="evaluation">
+                                    <option value="" selected>无限制</option>
+                                    <option value="通过" selected>通过</option>
+                                    <option value="未通过" selected>未通过</option>
+                                    <option value="未选课" selected>未选课</option>
+                                </select>
+                            </div>
+                            <input type="hidden" name="dept_name" value="{{ dept_name }}">
+                            <button type="submit" class="btn btn-primary">按类别搜索</button>
+                        </form>
                     </div>
                 </div>
             </div>

@@ -4,6 +4,14 @@ import pymysql as sql
 import utils
 
 
+def get_scores(user_id, course_id):
+    conn = dao_core.get_db()
+    cursor = conn.cursor()
+    cmd = 'select * from participate where user_id = %s and course_id = %s;'
+    cursor.execute(cmd,(user_id,course_id,))
+    return utils.dict_fetch_all(cursor)
+
+
 def get_best_score(user_id, course_id):
     conn = dao_core.get_db()
     cursor = conn.cursor()

@@ -58,16 +58,16 @@ def transfer_dept(username, user_id, dept_name):
     根据课程结果的状态和类型查找
     :param  dept_name   部门名称
     :param  course      课程编号/类型
-    :param  evaluation  成绩状态(None, UNSELECTED, PASSED, FAILED)
+    :param  evaluation  成绩状态 ("通过","未通过","未选课")
     :param  is_category 是否为课程类型
     :return 员工号 员工姓名 课程ID 课程名 课程类型 成绩状态
 '''
 
 
 def search_by_course_and_evaluation(dept_name, course, is_category, evaluation=None):
+    conn = dao_core.get_db()
+    cursor = conn.cursor()
     try:
-        conn = dao_core.get_db()
-        cursor = conn.cursor()
         #   按课程类型搜索
         if is_category is True:
             #   选了类型课的人
@@ -111,13 +111,14 @@ def search_by_course_and_evaluation(dept_name, course, is_category, evaluation=N
                              'NATURAL JOIN (SELECT * FROM ' \
                              '(SELECT course_id, name as c_name, category FROM course WHERE course_id = "%s") AS C ' \
                              'NATURAL JOIN take WHERE evaluation = "%s") AS B' % (dept_name, course, evaluation)
+        print(search_sql)
         cursor.execute(search_sql)
         infos = utils.dict_fetch_all(cursor)
         for info in infos:
             info['tests'] = []
             if evaluation != UNSELECTED:
                 info['tests'] = dao_participate.get_tests_by_uc(info['user_id'], info['course_id'])
-        print(infos)
+        return infos
     except sql.MySQLError as e:
         print(e)
     finally:
@@ -154,7 +155,8 @@ def search_by_test(dept_name, course_id, is_fail, num, compare):
                          'WHERE course_id = "%s") AS C ' \
                          'NATURAL JOIN (SELECT user_id, course_id, COUNT(user_id) AS num FROM participate ' \
                          'WHERE course_id = "%s" AND score < 60 ' \
-                         'GROUP BY user_id HAVING COUNT(user_id) %s %s) AS P) AS B;' % (dept_name, course_id, course_id, compare, num)
+                         'GROUP BY user_id HAVING COUNT(user_id) %s %s) AS P) AS B;' % (
+                             dept_name, course_id, course_id, compare, num)
         else:
             select_sql = 'SELECT * FROM (SELECT * FROM (SELECT user_id, name FROM employee ' \
                          'WHERE dept_name = "%s") AS E ' \

@@ -1,6 +1,6 @@
 import datetime
 import time
-from constants.info import *
+import json
 
 
 #   字符串转日期
@@ -56,3 +56,11 @@ def dict_fetch_all(cursor):
         dict(zip(columns, row))
         for row in cursor.fetchall()
     ]
+
+
+class DateEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, datetime.datetime):
+            return obj.strftime("%Y-%m-%d %H:%M:%S")
+        else:
+            return json.JSONEncoder.default(self, obj)
