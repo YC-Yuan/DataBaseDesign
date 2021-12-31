@@ -8,7 +8,7 @@ def get_best_score(user_id, course_id):
     conn = dao_core.get_db()
     cursor = conn.cursor()
     try:
-        if dao_course.is_over(course_id):
+        if not dao_course.is_over(course_id):
             return "未结课"
         select_sql = "SELECT MAX(score) AS max_score FROM participate WHERE user_id = %s AND course_id = %s;"
         cursor.execute(select_sql, (user_id, course_id,))

@@ -28,7 +28,7 @@
                          aria-labelledby="index-student">
                         {# 部门员工信息 #}
                         {% for course in courses %}
-                            <h2>{{ course.name }}</h2>
+                            <h2>{{ course.name }}(至{{ course.end_time }})</h2>
                             <table class="table table-bordered">
                                 <thead>
                                 <tr>
@@ -41,9 +41,7 @@
                                 <tbody>
                                 {% for s in course.students %}
                                     <tr>
-                                        <th scope="row"><a
-                                                href="?uid={{ s.user_id }}">{{ s.user_id }}</a>
-                                        </th>
+                                        <th scope="row">{{ s.user_id }}</th>
                                         <td>{{ s.name }}</td>
                                         <td>{{ s.hire_date }}</td>
                                         <td>{{ s.score }}</td>
