@@ -87,7 +87,7 @@
                     <div class="tab-pane fade" id="list-change-dept" role="tabpanel"
                          aria-labelledby="index-change-dept"
                     >
-                        <form action="{{ url_for('leader.change_dept') }}" method="post">
+                        <form action="{{ url_for('leader.change_dept') }}" method="post" id="change-dept-form">
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
                                     <label class="input-group-text" for="uid">转出员工号</label>
@@ -112,37 +112,22 @@
                                     <option value="营销部门">营销部门</option>
                                 </select>
                             </div>
+                            <input type="hidden" name="leader_id" value="{{ uid }}">
                             <button type="button" id="change-dept-button" class="btn btn-primary">确定转出</button>
                         </form>
                         <script>
                             let uid_select = $("#uid")
                             let dept_select = $("#dept")
                             $("#change-dept-button").click(function () {
-                                console.log(uid_select.val())
-                                console.log(dept_select.val())
                                 if (uid_select.val() === "") {
                                     alert("请选择要转出的员工")
                                 } else if (dept_select.val() === "") {
                                     alert("请选择要转到的部门")
                                 } else {
-                                    // 发送请求!
-                                    let form = new FormData();
-                                    form.append('uid', uid_select.val())
-                                    form.append('dept', dept_select.val())
-                                    form.append('leader_id', {{ uid }})
-                                    $.ajax({
-                                        url: "{{ url_for('leader.change_dept') }}",
-                                        type: "post",
-                                        data: form,
-                                        dataType: 'json',
-                                        success: function (data) {
-                                            alert(data)
-                                        },
-                                    })
+                                    $("#change-dept-form").submit()
                                 }
                             })
                         </script>
-                        {{ qualified_employee }}
                     </div>
                 </div>
             </div>

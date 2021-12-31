@@ -27,7 +27,7 @@ def get_user_id(username):
 def get_user_name(user_id):
     conn = dao_core.get_db()
     cursor = conn.cursor()
-    select_sql = "SELECT name FROM employee WHERE user_id = %s"
+    select_sql = "SELECT username FROM employee WHERE user_id = %s"
     cursor.execute(select_sql, (user_id,))
     row = cursor.fetchone()
     if row is None:
