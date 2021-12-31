@@ -130,7 +130,7 @@ def search_by_course_and_evaluation(dept_name, course, is_category, evaluation=N
     根据课程结果的状态和考试次数查找
     :param  dept_name   部门名称
     :param  course_id   课程编号_id
-    :param  is_fail     总次数/失败次数    True/False
+    :param  is_fail     失败次数/总次数    True/False
     :param  num         考试次数
     :param  compare     大于/等于/小于
     :return 员工号 员工姓名 课程ID 课程名 课程类型 成绩状态
@@ -138,9 +138,9 @@ def search_by_course_and_evaluation(dept_name, course, is_category, evaluation=N
 
 
 def search_by_test(dept_name, course_id, is_fail, num, compare):
+    conn = dao_core.get_db()
+    cursor = conn.cursor()
     try:
-        conn = dao_core.get_db()
-        cursor = conn.cursor()
         if compare == GREATER:
             compare = '>'
         elif compare == EQUAL:
@@ -171,7 +171,7 @@ def search_by_test(dept_name, course_id, is_fail, num, compare):
         infos = utils.dict_fetch_all(cursor)
         for info in infos:
             info['tests'] = dao_participate.get_tests_by_uc(info['user_id'], info['course_id'])
-        print(infos)
+        return infos
     except sql.MySQLError as e:
         print(e)
     finally:

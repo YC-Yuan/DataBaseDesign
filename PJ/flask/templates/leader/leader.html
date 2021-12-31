@@ -136,7 +136,7 @@
                          aria-labelledby="index-search"
                     >
                         <form action="{{ url_for('leader.search_by_category') }}" method="post"
-                              id="search-category-form">按类搜索
+                              id="search-category-form">
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
                                     <label class="input-group-text">类别</label>
@@ -149,13 +149,71 @@
                                 </div>
                                 <select class="custom-select" name="evaluation">
                                     <option value="" selected>无限制</option>
-                                    <option value="通过" selected>通过</option>
-                                    <option value="未通过" selected>未通过</option>
-                                    <option value="未选课" selected>未选课</option>
+                                    <option value="通过">通过</option>
+                                    <option value="未通过">未通过</option>
+                                    <option value="未选课">未选课</option>
                                 </select>
                             </div>
                             <input type="hidden" name="dept_name" value="{{ dept_name }}">
-                            <button type="submit" class="btn btn-primary">按类别搜索</button>
+                            <button type="submit" class="btn btn-outline-success">按类别搜索</button>
+                        </form>
+                        <form action="{{ url_for('leader.search_by_course_name') }}" method="post" class="mt-3"
+                              id="search-category-form">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text">课程名称</label>
+                                </div>
+                                <input type="text" name="course_name">
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text">授课结果</label>
+                                </div>
+                                <select class="custom-select" name="evaluation">
+                                    <option value="" selected>无限制</option>
+                                    <option value="通过">通过</option>
+                                    <option value="未通过">未通过</option>
+                                    <option value="未选课">未选课</option>
+                                </select>
+                            </div>
+                            <input type="hidden" name="dept_name" value="{{ dept_name }}">
+                            <button type="submit" class="btn btn-outline-success">按课程搜索</button>
+                        </form>
+                        <form action="{{ url_for('leader.search_by_test') }}" method="post" class="mt-3"
+                              id="search-category-form">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text">课程名称</label>
+                                </div>
+                                <input type="text" name="course_name">
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text">搜索指标</label>
+                                </div>
+                                <select class="custom-select" name="is_fail">
+                                    <option value="fail" selected>挂科次数</option>
+                                    <option value="try">尝试次数</option>
+                                </select>
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text">比较方式</label>
+                                </div>
+                                <select class="custom-select" name="compare">
+                                    <option value="大于" selected>></option>
+                                    <option value="等于">=</option>
+                                    <option value="小于"><</option>
+                                </select>
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text">次数</label>
+                                </div>
+                                <input type="number" name="num">
+                            </div>
+                            <input type="hidden" name="dept_name" value="{{ dept_name }}">
+                            <button type="submit" class="btn btn-outline-success">按课程搜索</button>
                         </form>
                     </div>
                 </div>
