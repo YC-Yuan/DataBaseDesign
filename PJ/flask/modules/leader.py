@@ -1,7 +1,7 @@
 # leader 后端服务
 
 from flask import Blueprint, request, jsonify
-from dao import dao_user, dao_staff, dao_course
+from dao import dao_user, dao_staff, dao_course, dao_dept
 from modules import route
 import pymysql as sql
 
@@ -22,12 +22,23 @@ def change_dept():
     leader_username = dao_user.get_username(lid)
     uid = request.values.get('uid')
     dept = request.values.get('dept')
+    # 新部门需补修的课
+    need = dao_dept.get_dept_need_take_course(uid, dept)
     try:
         dao_staff.transfer_dept(username=leader_username, user_id=uid, dept_name=dept)
     except sql.MySQLError as e:
         print(e)
         return "出错了"
-    return "成功"
+    return jsonify(need)
+
+
+@bp_leader.route('/query/mandatory', methods=['POST'])
+def mandatory():
+    uid = request.values.get('uid')
+    dept = request.values.get('dept')
+    # 新部门需补修的课
+    need = dao_dept.get_dept_need_take_course(uid, dept)
+    return jsonify(need)
 
 
 @bp_leader.route('/search/category', methods=['POST'])

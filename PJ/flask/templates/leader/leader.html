@@ -116,18 +116,50 @@
                                 </select>
                             </div>
                             <input type="hidden" name="leader_id" value="{{ uid }}">
-                            <button type="button" id="change-dept-button" class="btn btn-primary">确定转出</button>
+                            <button type="button" id="change-dept-check" class="btn btn-outline-secondary">需补修课程预查询
+                            </button>
+                            <button type="button" id="change-dept-button" class="btn btn-outline-success">确认转出</button>
                         </form>
                         <script>
                             let uid_select = $("#uid")
                             let dept_select = $("#dept")
-                            $("#change-dept-button").click(function () {
+
+                            function check_args() {
                                 if (uid_select.val() === "") {
                                     alert("请选择要转出的员工")
                                 } else if (dept_select.val() === "") {
                                     alert("请选择要转到的部门")
                                 } else {
+                                    return true
+                                }
+                                return false
+                            }
+
+                            $("#change-dept-button").click(function () {
+                                if (check_args()) {
                                     $("#change-dept-form").submit()
+                                }
+                            })
+                            $("#change-dept-check").click(function () {
+                                if (check_args()) {
+                                    let form = new FormData();
+                                    form.append('uid', uid_select.val())
+                                    form.append('dept', dept_select.val())
+                                    $.ajax({
+                                        url: "{{ url_for('leader.mandatory') }}",
+                                        type: "post",
+                                        data: form,
+                                        dataType: 'json',
+                                        processData: false,
+                                        contentType: false,
+                                        success: function (data) {
+                                            for (let c in data) {
+                                                c = data[c]
+                                                alert("转部门需补必修课:\n" + c['name'] + "(" + c['category'] + "类)")
+                                            }
+                                            console.log(data)
+                                        },
+                                    })
                                 }
                             })
                         </script>
