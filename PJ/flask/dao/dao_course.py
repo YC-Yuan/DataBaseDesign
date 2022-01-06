@@ -1,3 +1,4 @@
+import dao.dao_core
 from constants.info import *
 from dao import dao_user, dao_core, dao_dept, dao_participate, dao_log, dao_employee
 import pymysql as sql
@@ -151,6 +152,14 @@ def insert_course(username, instructor_id, course_id, name, content, category, s
     dao_core.execute_sql_list(cmd_list)
 
 
+def set_course(username, instructor_id, course_id, name, content, category, start_time, end_time):
+    cmd = 'update course set ( name="%s",content="%s",category="%s",start_time="%s",end_time="%s",instructor_id="%s"' \
+          'where course_id = %s' % (name, content, category, start_time, end_time, instructor_id, course_id)
+    dao_core.execute_sql(cmd)
+    operation = "modify course %s (instructor: %s)" % (course_id, instructor_id)
+    dao_core.execute_sql(dao_log.insert_log(username, operation))
+
+
 #   设置课程要求
 #   require: obligatory(必修) elective(选修) disable(不可选)
 def set_course_require(username, course_id, dept_name, require):
@@ -158,7 +167,7 @@ def set_course_require(username, course_id, dept_name, require):
     cursor = conn.cursor()
     try:
         dept_id = dao_dept.get_dept_id(dept_name)
-        operation = "set course %s to %s" % (course_id, require)
+        operation = "set course %s to %s for %s" % (course_id, require,dept_name)
         #   取消课程
         if require == DISABLE:
             delete_sql = "DELETE FROM offer WHERE course_id = %s AND dept_id = %s"
@@ -194,6 +203,16 @@ def set_course_require(username, course_id, dept_name, require):
     finally:
         cursor.close()
         conn.close()
+
+
+# 查看是否存在
+def has_course(cid):
+    conn = dao_core.get_db()
+    cursor = conn.cursor()
+    cmd = 'select count(*) from course where course_id = %s'
+    cursor.execute(cmd, (cid,))
+    has = cursor.fetchone()
+    return has[0] != 0
 
 
 #   删除课程

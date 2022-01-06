@@ -142,7 +142,7 @@
                             })
                             $("#change-dept-check").click(function () {
                                 if (check_args()) {
-                                    let form = new FormData();
+                                    let form = new FormData()
                                     form.append('uid', uid_select.val())
                                     form.append('dept', dept_select.val())
                                     $.ajax({

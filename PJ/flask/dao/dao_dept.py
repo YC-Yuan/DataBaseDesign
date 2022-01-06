@@ -30,6 +30,23 @@ def get_dept_id(dept_name):
     return row[0]
 
 
+def get_all():
+    conn = dao_core.get_db()
+    cursor = conn.cursor()
+    cmd = 'select * from department'
+    cursor.execute(cmd)
+    return utils.dict_fetch_all(cursor)
+
+
+def has_dept(dept_name):
+    conn = dao_core.get_db()
+    cursor = conn.cursor()
+    cmd = 'select count(*) from department where name = %s'
+    cursor.execute(cmd, (dept_name,))
+    has = cursor.fetchone()
+    return has[0] != 0
+
+
 '''
     获取部门下必修课ID
     :param  dept_name   部门名称

@@ -69,4 +69,6 @@ def admin(username):
     courses = dao_course.get_course_info()
     logs = dao_log.get_log_info()
     employee = dao_employee.get_employee_info()
-    return render_template('admin/admin.html', admin=username, logs=logs, courses=courses, employee=employee)
+    departments = dao_dept.get_all()
+    return render_template('admin/admin.html', admin=username, logs=logs, courses=courses, employee=employee,
+                           departments=departments)

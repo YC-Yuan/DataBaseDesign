@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admin</title>
+    <title>管理员</title>
     <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
-
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 </head>
 <body>
-<div class="container">
+<div class="container-fluid">
     <div class="jumbotron mt-2">
         <h1 class="display-4">系统管理员</h1>
         <hr class="my-4">
@@ -20,7 +20,7 @@
                     <a class="list-group-item list-group-item-action" id="list-course-list" data-toggle="list"
                        href="#list-course" role="tab">课程总览</a>
                     <a class="list-group-item list-group-item-action" id="list-employee-list" data-toggle="list"
-                       href="#list-employee" role="tab">课程总览</a>
+                       href="#list-employee" role="tab">用户总览</a>
                 </div>
             </div>
             <div class="col-9">
@@ -31,16 +31,16 @@
                             <tbody>
                             <tr>
                                 <th>记录号</th>
-                                <td>操作者</td>
-                                <td>内容</td>
-                                <td>时间</td>
+                                <th>操作者</th>
+                                <th>内容</th>
+                                <th>时间</th>
                             </tr>
                             {% for log in logs %}
                                 <tr>
                                     <th>{{ log.log_id }}</th>
-                                    <th>{{ log.username }}</th>
-                                    <th>{{ log.operation }}</th>
-                                    <th>{{ log.date }}</th>
+                                    <td>{{ log.username }}</td>
+                                    <td>{{ log.operation }}</td>
+                                    <td>{{ log.date }}</td>
                                 </tr>
                             {% endfor %}
                             </tbody>
@@ -67,6 +67,13 @@
                                     <td>{{ course.category }}</td>
                                     <td>{{ course.start_time }}至{{ course.end_time }}</td>
                                     <td>{{ course.instructor }}</td>
+                                    <td>
+                                        <form action="{{ url_for('admin.delete_course') }}" method="post">
+                                            <input hidden name="admin" value="{{ admin }}">
+                                            <input hidden name="course_id" value="{{ course.course_id }}">
+                                            <button class="btn btn-outline-danger" id="{{ course.name }}">删除</button>
+                                        </form>
+                                    </td>
                                 </tr>
                             {% endfor %}</tbody>
                         </table>
@@ -100,7 +107,33 @@
                                 <label>结课日期</label>
                                 <input type="date" name="end_time" class="form-control">
                             </div>
-                            <button class="btn btn-outline-success">创建新课程</button>
+                            <button class="btn btn-outline-success">确定创建/修改</button>
+                        </form>
+                        <form action="{{ url_for('admin.need') }}" method="post">
+                            <input type="hidden" name="admin" value="{{ admin }}">
+                            <div class="form-group">
+                                <label>课程编号</label>
+                                <input type="text" class="form-control" name="course_id">
+                            </div>
+                            <div class="form-group">
+                                <label>部门</label>
+                                <select name="dept" class="form-control">
+                                    {% for department in departments %}
+                                        <option value="{{ department['name'] }}">{{ department['name'] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>修读要求</label>
+                                <select name="needy" class="form-control">
+                                    <option value="必修">必修</option>
+                                    <option value="选修">选修</option>
+                                    <option value="不可选">不可选</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn-outline-success form-control">改动修读要求</button>
+                            </div>
                         </form>
                     </div>
                     <div class="tab-pane fade" id="list-employee" role="tabpanel" aria-labelledby="list-employee-list">
@@ -117,12 +150,15 @@
                                 <td>电话</td>
                                 <td>邮箱</td>
                                 <td>所在部门</td>
+                                <td></td>
                             </tr>
                             </thead>
                             <tbody>
                             {% for e in employee %}
                                 <tr>
-                                    <th>{{ e.user_id }}</th>
+                                    <th scope="row"><a
+                                            href="{{ url_for('route.staff',user_id=e.user_id) }}">{{ e.user_id }}</a>
+                                    </th>
                                     <td>{{ e.username }}</td>
                                     <td>{{ e.name }}</td>
                                     <td>{{ e.gender }}</td>
@@ -132,6 +168,13 @@
                                     <td>{{ e.telephone }}</td>
                                     <td>{{ e.email }}</td>
                                     <td>{{ e.dept_name }}</td>
+                                    <td>
+                                        <form action="{{ url_for('admin.delete_employee') }}" method="post">
+                                            <input hidden name="admin" value="{{ admin }}">
+                                            <input hidden name="username" value="{{ e.username }}">
+                                            <button class="btn btn-outline-danger"">删除</button>
+                                        </form>
+                                    </td>
                                 </tr>
                             {% endfor %}
                             </tbody>
